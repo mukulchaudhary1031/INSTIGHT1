@@ -1,0 +1,31 @@
+name: FastAPI CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code uthao (checkout)
+        uses: actions/checkout@v4
+
+      - name: Python install karo
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Dependencies install karo
+        run: |
+          pip install -r requirements.txt
+
+      - name: FastAPI check
+        run: |
+          python -c "import fastapi; print('FastAPI OK')"
+
+      - name: Docker image build karo
+        run: |
+          docker build -t fastapi-app .
