@@ -76,7 +76,7 @@ def _evict_old_sessions():
 RAZORPAY_KEY_ID     = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
 
-if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET: raise ValueError("RAZORPAY keys not set in environment variables")
+if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET: print("RAZORPAY keys not set in environment variables")
 
 PLAN_AMOUNT   = 249900
 FREE_UPLOADS  = 2
