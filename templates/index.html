@@ -22,7 +22,6 @@ body::before{content:'';position:fixed;inset:0;
   linear-gradient(90deg,rgba(0,229,200,.025)1px,transparent 1px);
   background-size:44px 44px;pointer-events:none;z-index:0}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
   justify-content:space-between;padding:0 28px;height:58px;
   background:rgba(7,9,15,.92);backdrop-filter:blur(20px);
@@ -38,7 +37,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .npill.on{background:var(--card);color:var(--teal);box-shadow:0 1px 6px rgba(0,0,0,.4)}
 .npill:disabled{opacity:.3;cursor:not-allowed}
 
-/* NAV USER AREA */
 .nav-user{display:flex;align-items:center;gap:10px}
 .upload-pill{padding:4px 11px;border-radius:99px;font-family:var(--fm);font-size:.72rem;
   font-weight:600;border:1px solid rgba(0,229,200,.3);background:rgba(0,229,200,.08);
@@ -50,21 +48,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   background:transparent;color:var(--muted);font-size:.72rem;cursor:pointer;font-family:var(--ff)}
 .btn-logout:hover{color:var(--red);border-color:var(--red)}
 
-/* PAGES */
 .page{display:none;padding-top:58px;min-height:100vh;position:relative;z-index:1}
 .page.on{display:block}
 .wrap{max-width:1080px;margin:0 auto;padding:34px 22px}
 
-/* TYPE */
 .ptitle{font-family:var(--fd);font-size:1.7rem;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
 .psub{color:var(--muted);font-size:.87rem;margin-bottom:26px}
 .stitle{font-family:var(--fd);font-size:.92rem;font-weight:700;margin-bottom:13px;
   display:flex;align-items:center;gap:7px}
 
-/* CARD */
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
 
-/* BTN */
 .btn{padding:9px 20px;border-radius:8px;font-family:var(--ff);font-size:.875rem;font-weight:600;
   cursor:pointer;transition:all .18s;border:none;display:inline-flex;align-items:center;gap:6px}
 .btn-p{background:var(--teal);color:var(--bg)}
@@ -80,7 +74,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,229,200,.35)}
 
-/* FORM */
 .fg{margin-bottom:15px}
 .flbl{display:block;font-size:.73rem;font-weight:600;color:var(--muted);
   text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
@@ -92,7 +85,6 @@ select.fc{cursor:pointer;padding-right:30px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%236B7A99' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center}
 
-/* MODAL OVERLAY */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);
   backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center}
 .modal-overlay.on{display:flex}
@@ -109,7 +101,6 @@ select.fc{cursor:pointer;padding-right:30px;
   color:var(--muted);font-family:var(--ff);font-size:.82rem;font-weight:600;cursor:pointer}
 .mtab.on{background:var(--card);color:var(--teal)}
 
-/* PAYMENT MODAL */
 .pay-plan{background:linear-gradient(135deg,rgba(0,229,200,.06),rgba(0,191,255,.04));
   border:1px solid rgba(0,229,200,.25);border-radius:14px;padding:22px;margin-bottom:22px}
 .pay-price{font-family:var(--fd);font-size:2.8rem;font-weight:800;color:var(--teal)}
@@ -121,25 +112,28 @@ select.fc{cursor:pointer;padding-right:30px;
   border-radius:9px;padding:11px 14px;font-size:.8rem;color:var(--amber);
   margin-bottom:18px;display:flex;align-items:center;gap:8px}
 
-/* DROP ZONE */
+/* ═══════════════════════════════
+   DROP ZONE — FIXED (no onclick conflict)
+   ═══════════════════════════════ */
 .drop{border:2px dashed var(--border);border-radius:14px;padding:48px 28px;
   text-align:center;cursor:pointer;transition:all .22s;background:rgba(0,229,200,.018);
-  position:relative;margin-bottom:18px}
+  position:relative;margin-bottom:18px;user-select:none}
 .drop:hover,.drop.drag{border-color:var(--teal);background:rgba(0,229,200,.05)}
-.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop-icon{font-size:2.6rem;margin-bottom:11px}
-.drop h3{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:4px}
-.drop p{color:var(--muted);font-size:.83rem}
-.chips{display:flex;gap:7px;justify-content:center;margin-top:11px;flex-wrap:wrap}
+/* Input fills entire drop zone — clicking anywhere triggers file dialog */
+.drop input[type="file"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;
+  width:100%;height:100%;z-index:2}
+.drop-icon{font-size:2.6rem;margin-bottom:11px;pointer-events:none}
+.drop h3{font-family:var(--fd);font-size:1.1rem;font-weight:700;margin-bottom:4px;pointer-events:none}
+.drop p{color:var(--muted);font-size:.83rem;pointer-events:none}
+.chips{display:flex;gap:7px;justify-content:center;margin-top:11px;flex-wrap:wrap;pointer-events:none}
 .chip{padding:3px 11px;border-radius:99px;border:1px solid var(--border);
   font-family:var(--fm);font-size:.7rem;color:var(--muted)}
 
-/* FILE PREVIEW */
 .fp{background:var(--card);border:1px solid var(--border);border-radius:10px;
   padding:13px 17px;display:none;align-items:center;gap:12px;margin-bottom:16px}
 .fp.on{display:flex}
 
-/* TASK CARDS */
 .task-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
 .task-c{background:var(--card);border:2px solid var(--border);border-radius:11px;
   padding:17px;cursor:pointer;transition:all .2s;text-align:center}
@@ -149,7 +143,6 @@ select.fc{cursor:pointer;padding-right:30px;
 .task-c h4{font-weight:700;margin-bottom:3px;font-size:.9rem}
 .task-c p{font-size:.77rem;color:var(--muted)}
 
-/* PROGRESS */
 .pbar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin:7px 0}
 .pfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal2));
   border-radius:99px;width:0%;transition:width .5s ease}
@@ -160,7 +153,6 @@ select.fc{cursor:pointer;padding-right:30px;
 .step-item.act .sdot{background:var(--teal);animation:pulse 1s infinite}
 .step-item.done .sdot{background:var(--green)}
 
-/* ALERTS */
 .alert{padding:11px 15px;border-radius:8px;font-size:.84rem;margin-bottom:13px;
   display:flex;align-items:flex-start;gap:8px}
 .al-info{background:rgba(0,229,200,.07);border:1px solid rgba(0,229,200,.22);color:var(--teal)}
@@ -168,7 +160,6 @@ select.fc{cursor:pointer;padding-right:30px;
 .al-err {background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.3);color:var(--red)}
 .al-warn{background:rgba(255,140,66,.08);border:1px solid rgba(255,140,66,.3);color:var(--amber)}
 
-/* DEBUG BOX */
 .debug-box{background:#0a0f1a;border:1px solid #1e2d45;border-radius:8px;
   padding:12px;font-family:var(--fm);font-size:.75rem;color:#6b7a99;
   max-height:120px;overflow-y:auto;margin-top:10px;display:none}
@@ -178,7 +169,6 @@ select.fc{cursor:pointer;padding-right:30px;
 .debug-line.ok{color:var(--green)}
 .debug-line.info{color:var(--teal)}
 
-/* BADGES */
 .badge{padding:2px 9px;border-radius:4px;font-family:var(--fm);font-size:.7rem;font-weight:600}
 .bg-g{background:rgba(61,219,138,.14);color:var(--green)}
 .bg-a{background:rgba(255,140,66,.14);color:var(--amber)}
@@ -189,21 +179,18 @@ select.fc{cursor:pointer;padding-right:30px;
   font-family:var(--fm);font-size:.7rem;border:1px solid rgba(0,229,200,.25);
   background:rgba(0,229,200,.08);color:var(--teal)}
 
-/* METRICS */
 .m-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .m-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:17px}
 .m-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .m-val{font-family:var(--fd);font-size:1.75rem;font-weight:800}
 .m-sub{font-size:.7rem;color:var(--muted);margin-top:3px}
 
-/* CHARTS */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:17px}
 .chart-card.full{grid-column:1/-1}
 .chart-card img{width:100%;border-radius:7px;display:block;margin-top:9px}
 .chart-ttl{font-family:var(--fd);font-weight:700;font-size:.86rem}
 
-/* TABLE */
 .tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse}
 th{padding:9px 15px;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;
@@ -213,14 +200,12 @@ td{padding:9px 15px;font-size:.85rem;border-bottom:1px solid rgba(30,45,69,.5)}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(255,255,255,.02)}
 
-/* FI */
 .fi-row{display:flex;align-items:center;gap:11px;margin-bottom:9px}
 .fi-lbl{font-size:.79rem;width:145px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fi-track{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
 .fi-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--teal2))}
 .fi-pct{font-family:var(--fm);font-size:.73rem;color:var(--muted);width:40px;text-align:right}
 
-/* PREDICT */
 .pred-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .pred-result{background:var(--bg2);border:1px solid var(--border);
   border-radius:12px;padding:24px;text-align:center}
@@ -232,7 +217,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .proba-fill{height:100%;border-radius:99px}
 .proba-pct{font-family:var(--fm);font-size:.73rem;width:36px;text-align:right}
 
-/* CHAT */
 .chat-layout{display:grid;grid-template-columns:195px 1fr;gap:16px;
   height:calc(100vh - 58px - 105px)}
 .chat-sb{background:var(--card);border:1px solid var(--border);border-radius:12px;
@@ -277,7 +261,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   border:none;color:var(--bg);cursor:pointer;font-size:.95rem}
 .chat-send:hover{opacity:.85}
 
-/* COMPARE */
 .comp-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .sc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:15px}
 .sc-ttl{font-weight:700;font-size:.84rem;margin-bottom:10px;color:var(--teal)}
@@ -288,19 +271,16 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .sv{font-family:var(--fm)}
 .sv.old{color:var(--amber)}.sv.new{color:var(--teal)}
 
-/* SAMPLE TABLE */
 .stbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-top:11px}
 .stbl th{background:var(--bg2)}
 .stbl td{font-family:var(--fm);font-size:.76rem}
 
-/* RESULT TABS */
 .rtabs{display:flex;gap:2px;background:var(--bg2);padding:3px;
   border-radius:9px;width:fit-content;margin-bottom:18px}
 .rtab{padding:6px 15px;border-radius:7px;border:none;background:transparent;
   color:var(--muted);font-family:var(--ff);font-size:.79rem;font-weight:500;cursor:pointer}
 .rtab.on{background:var(--card);color:var(--teal);box-shadow:0 1px 5px rgba(0,0,0,.35)}
 
-/* KPI DASHBOARD */
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
 .kpi-icon{font-size:1.8rem;margin-bottom:8px}
@@ -315,7 +295,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   line-height:1.7;color:var(--text);background:rgba(0,229,200,.04);
   border-left:3px solid var(--teal)}
 
-/* TREND MODAL */
 .trend-modal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;
   padding:28px;width:100%;max-width:900px;position:relative;animation:slideUp .25s ease;
   max-height:85vh;overflow-y:auto}
@@ -323,7 +302,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   background:rgba(0,229,200,.05);border:1px solid rgba(0,229,200,.18);margin-top:14px}
 .divider{height:1px;background:var(--border);margin:22px 0}
 
-/* SUMMARY CARD */
 .summary-card{border-radius:14px;padding:22px 26px;margin-bottom:18px;
   background:linear-gradient(135deg,rgba(0,229,200,.07),rgba(0,191,255,.04));
   border:1px solid rgba(0,229,200,.22)}
@@ -334,12 +312,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .m-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:8px}
 .m-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
 
-/* INSIGHT PILLS */
 .insight-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .insight-pill{padding:6px 13px;border-radius:99px;font-size:.78rem;font-weight:500;
   border:1px solid var(--border);background:var(--card);display:flex;align-items:center;gap:6px}
 
-/* FI friendly */
 .fi-explain{font-size:.75rem;color:var(--muted);margin-top:3px}
 
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -366,7 +342,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <button class="npill" id="np-chat"    onclick="gp('chat')"    disabled>💬 Chatbot</button>
     <button class="npill" id="np-compare" onclick="gp('compare')">🔄 Compare</button>
   </div>
-  <!-- User info -->
   <div class="nav-user" id="navUser" style="display:none">
     <span class="nav-email" id="navEmail">—</span>
     <span class="upload-pill" id="navUploads">— uploads left</span>
@@ -378,8 +353,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </nav>
 
-
-<!-- ══════════ AUTH MODAL ══════════ -->
+<!-- AUTH MODAL -->
 <div class="modal-overlay" id="authModal">
   <div class="modal">
     <button class="modal-close" onclick="closeAuth()">✕</button>
@@ -389,7 +363,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <button class="mtab on" id="mtab-login"    onclick="switchTab('login')">Login</button>
       <button class="mtab"    id="mtab-register" onclick="switchTab('register')">Sign Up</button>
     </div>
-    <div id="authErr" style="display:none" class="alert al-err" style="margin-bottom:14px"></div>
+    <div id="authErr" style="display:none" class="alert al-err"></div>
     <div class="fg">
       <label class="flbl">Email</label>
       <input class="fc" id="authEmail" type="email" placeholder="you@example.com"/>
@@ -405,18 +379,13 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-
-<!-- ══════════ PAYMENT MODAL ══════════ -->
+<!-- PAYMENT MODAL -->
 <div class="modal-overlay" id="payModal">
   <div class="modal" style="max-width:460px">
     <button class="modal-close" onclick="closePayModal()">✕</button>
     <div class="modal-title">🚀 Upgrade to Pro</div>
     <div class="modal-sub">Your free trial is over. Subscribe to continue.</div>
-
-    <div class="trial-banner">
-      ⚠️ Free trial used (2/2 uploads). Subscribe to unlock 10 uploads/month.
-    </div>
-
+    <div class="trial-banner">⚠️ Free trial used (2/2 uploads). Subscribe to unlock 10 uploads/month.</div>
     <div class="pay-plan">
       <div style="font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Pro Plan</div>
       <div class="pay-price">₹2,499<span>/month</span></div>
@@ -429,7 +398,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <li>Saved datasets in cloud DB (never lost)</li>
       </ul>
     </div>
-
     <button class="btn-pay" onclick="startPayment()">
       <span>Pay ₹2,499</span> <span style="font-size:.85rem;opacity:.8">— Razorpay · Secure</span>
     </button>
@@ -440,8 +408,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-
-<!-- ══════════ TREND PREDICTION MODAL ══════════ -->
+<!-- TREND PREDICTION MODAL -->
 <div class="modal-overlay" id="trendModal">
   <div class="trend-modal">
     <button class="modal-close" onclick="closeTrendModal()">✕</button>
@@ -460,15 +427,14 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-
 <!-- ══════════ UPLOAD PAGE ══════════ -->
 <div class="page on" id="pg-upload">
 <div class="wrap">
   <div class="ptitle">Upload Dataset</div>
   <div class="psub">CSV or Excel (.xlsx/.xls) only · <span id="uploadQuota" style="color:var(--teal)">Login to start</span></div>
 
+  <!-- ✅ FIX: No onclick on div — hidden input covers full area, single click works perfectly -->
   <div class="drop" id="dropZone"
-    onclick="document.getElementById('fi').click()"
     ondragover="event.preventDefault();this.classList.add('drag')"
     ondragleave="this.classList.remove('drag')"
     ondrop="onDrop(event)">
@@ -491,10 +457,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <div id="uploadStatus" style="display:none" class="alert al-info">⏳ Uploading...</div>
-  <div id="pdfCsvBox" style="display:none;margin-bottom:13px" class="alert al-ok">
-    📄 PDF uploaded! Data extracted successfully. &nbsp;
-    <button class="btn btn-g" style="padding:4px 12px;font-size:.78rem;margin-left:8px" onclick="downloadPdfCsv()">⬇️ Download as CSV</button>
-  </div>
 
   <div id="step2" style="display:none">
     <div class="stitle" style="margin-top:22px">Step 2 — Task Type</div>
@@ -557,7 +519,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 </div>
 
-
 <!-- ══════════ RESULTS PAGE ══════════ -->
 <div class="page" id="pg-results">
 <div class="wrap">
@@ -573,7 +534,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
   <div id="cleanAlert" style="display:none" class="alert al-info"></div>
 
-  <!-- Plain English Summary Card -->
   <div id="summaryCard" style="display:none" class="summary-card">
     <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
       <div>
@@ -595,9 +555,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <button class="rtab"    onclick="rTab(this,'fi')">🔍 What Matters Most?</button>
   </div>
 
-  <div id="rt-kpi" style="display:none">
-    <div id="kpiDash"></div>
-  </div>
+  <div id="rt-kpi" style="display:none"><div id="kpiDash"></div></div>
   <div id="rt-eda"><div class="charts-grid" id="edaCharts"></div></div>
   <div id="rt-ml" style="display:none">
     <div class="m-grid" id="mGrid"></div>
@@ -633,7 +591,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 </div>
 
-
 <!-- ══════════ PREDICT PAGE ══════════ -->
 <div class="page" id="pg-predict">
 <div class="wrap">
@@ -660,7 +617,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 </div>
-
 
 <!-- ══════════ CHATBOT PAGE ══════════ -->
 <div class="page" id="pg-chat">
@@ -705,18 +661,16 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 </div>
 
-
 <!-- ══════════ COMPARE PAGE ══════════ -->
 <div class="page" id="pg-compare">
 <div class="wrap">
   <div class="ptitle">🔄 Dataset Comparison</div>
   <div class="psub">Compare two versions of your data — detect changes, drift, and improvements</div>
-
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px">
     <div class="card">
       <div class="stitle">💾 Save Current Dataset</div>
       <div style="font-size:.8rem;color:var(--muted);margin-bottom:12px">
-        Give this dataset a label (e.g. "January_2024" or "Before_Campaign") so you can compare it later.
+        Give this dataset a label (e.g. "January_2024") so you can compare it later.
       </div>
       <div class="fg">
         <label class="flbl">Label</label>
@@ -743,35 +697,22 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <div id="compResults" style="display:none">
     <div class="divider"></div>
-
-    <!-- Shape summary -->
     <div class="stitle" style="margin-bottom:12px">📐 Dataset Size Comparison</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px" id="compShape"></div>
-
-    <!-- Drift Table -->
     <div id="compDriftWrap" style="display:none;margin-bottom:20px">
       <div class="stitle">🔬 Data Drift Analysis</div>
       <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px">
-        Drift = how much the data distribution has changed between the two datasets.
-        High drift means the data behaves differently — your model may need retraining.
+        Drift = how much the data distribution has changed between datasets.
       </div>
       <div class="tbl-wrap">
         <table>
-          <thead><tr>
-            <th>Column</th><th>Status</th>
-            <th>Old Average</th><th>New Average</th>
-            <th>Change</th>
-          </tr></thead>
+          <thead><tr><th>Column</th><th>Status</th><th>Old Average</th><th>New Average</th><th>Change</th></tr></thead>
           <tbody id="compDriftBody"></tbody>
         </table>
       </div>
     </div>
-
-    <!-- Charts -->
     <div class="stitle" style="margin-bottom:12px">📈 Visual Comparison</div>
     <div class="charts-grid" id="compCharts"></div>
-
-    <!-- Stats table -->
     <div id="compStatsWrap" style="display:none;margin-top:20px">
       <div class="stitle">📋 Detailed Statistics</div>
       <div class="comp-2" id="compStats"></div>
@@ -779,7 +720,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 </div>
-
 
 <script>
 // ════════════════════════════════════════
@@ -797,7 +737,7 @@ function authHeaders() {
 }
 
 // ════════════════════════════════════════
-// NAV / USER UI
+// NAV
 // ════════════════════════════════════════
 function gp(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
@@ -816,13 +756,11 @@ function updateNavUser(email, uploadsLeft, isSubscribed) {
   document.getElementById('navLoginBtn').style.display = 'none';
   document.getElementById('navUser').style.display     = 'flex';
   document.getElementById('navEmail').textContent      = email;
-
   const pill = document.getElementById('navUploads');
   pill.textContent = `${uploadsLeft} upload${uploadsLeft!==1?'s':''} left`;
   pill.className   = 'upload-pill';
-  if (uploadsLeft === 0)      pill.classList.add('danger');
-  else if (uploadsLeft <= 2)  pill.classList.add('warn');
-
+  if (uploadsLeft === 0)     pill.classList.add('danger');
+  else if (uploadsLeft <= 2) pill.classList.add('warn');
   const quota = document.getElementById('uploadQuota');
   if (isSubscribed) {
     quota.textContent = `✅ Pro · ${uploadsLeft} uploads left this month`;
@@ -857,50 +795,36 @@ function openAuth(mode) {
   document.getElementById('authErr').style.display = 'none';
   document.getElementById('authModal').classList.add('on');
 }
-function closeAuth() {
-  document.getElementById('authModal').classList.remove('on');
-}
+function closeAuth() { document.getElementById('authModal').classList.remove('on'); }
 function switchTab(mode) {
   authMode = mode;
   document.getElementById('mtab-login').classList.toggle('on', mode==='login');
   document.getElementById('mtab-register').classList.toggle('on', mode==='register');
   document.getElementById('authSubmitBtn').textContent = mode==='login' ? 'Login' : 'Create Account';
   document.getElementById('authNote').textContent = mode==='login'
-    ? 'Don\'t have an account? Click Sign Up above.'
+    ? "Don't have an account? Click Sign Up above."
     : 'Sign up to get 2 free uploads!';
 }
-
 async function submitAuth() {
   const email = document.getElementById('authEmail').value.trim();
   const pass  = document.getElementById('authPass').value.trim();
   const errEl = document.getElementById('authErr');
   errEl.style.display = 'none';
-
   if (!email || !pass) { errEl.style.display='flex'; errEl.textContent='❌ Email and password required.'; return; }
-
   try {
     const res  = await fetch('/' + authMode, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ email, password: pass })
     });
     const data = await res.json();
-    if (!res.ok) {
-      errEl.style.display = 'flex';
-      errEl.textContent   = '❌ ' + (data.detail || 'Error');
-      return;
-    }
-    AUTH.token = data.token;
-    AUTH.email = data.email;
+    if (!res.ok) { errEl.style.display='flex'; errEl.textContent='❌ '+(data.detail||'Error'); return; }
+    AUTH.token = data.token; AUTH.email = data.email;
     localStorage.setItem('iq_token', data.token);
     localStorage.setItem('iq_email', data.email);
     updateNavUser(data.email, data.uploads_left, data.is_subscribed);
     closeAuth();
-    dbg('Logged in as ' + data.email + ' — uploads left: ' + data.uploads_left, 'ok');
-  } catch(e) {
-    errEl.style.display = 'flex';
-    errEl.textContent   = '❌ Network error: ' + e.message;
-  }
+    dbg('Logged in as ' + data.email, 'ok');
+  } catch(e) { errEl.style.display='flex'; errEl.textContent='❌ Network error: '+e.message; }
 }
 
 // ════════════════════════════════════════
@@ -910,29 +834,20 @@ function openPayModal() {
   document.getElementById('payErr').style.display = 'none';
   document.getElementById('payModal').classList.add('on');
 }
-function closePayModal() {
-  document.getElementById('payModal').classList.remove('on');
-}
-
+function closePayModal() { document.getElementById('payModal').classList.remove('on'); }
 async function startPayment() {
   if (!AUTH.token) { closePayModal(); openAuth('login'); return; }
   const errEl = document.getElementById('payErr');
   errEl.style.display = 'none';
-
   try {
     const res  = await fetch('/create-order', { method:'POST', headers: authHeaders() });
     const data = await res.json();
     if (!res.ok) { errEl.style.display='flex'; errEl.textContent='❌ '+(data.detail||'Error'); return; }
-
     const options = {
-      key:         data.key_id,
-      amount:      data.amount,
-      currency:    data.currency,
-      name:        'InsightIQ',
-      description: 'Pro Plan — 10 uploads/month',
-      order_id:    data.order_id,
-      prefill:     { email: AUTH.email },
-      theme:       { color: '#00E5C8' },
+      key: data.key_id, amount: data.amount, currency: data.currency,
+      name: 'InsightIQ', description: 'Pro Plan — 10 uploads/month',
+      order_id: data.order_id, prefill: { email: AUTH.email },
+      theme: { color: '#00E5C8' },
       handler: async function(response) {
         const vRes = await fetch('/verify-payment', {
           method:'POST',
@@ -943,20 +858,15 @@ async function startPayment() {
         if (vRes.ok) {
           closePayModal();
           updateNavUser(AUTH.email, vData.uploads_left, true);
-          alert('🎉 Payment successful!\n10 uploads activated for 30 days.\n\nYou can now upload your file.');
+          alert('🎉 Payment successful!\n10 uploads activated for 30 days.');
         } else {
-          errEl.style.display = 'flex';
-          errEl.textContent   = '❌ ' + (vData.detail || 'Verification failed');
+          errEl.style.display='flex'; errEl.textContent='❌ '+(vData.detail||'Verification failed');
         }
       },
-      modal: { ondismiss: function() { dbg('Razorpay modal closed', 'info'); } }
+      modal: { ondismiss: function() { dbg('Razorpay modal closed','info'); } }
     };
-    const rzp = new Razorpay(options);
-    rzp.open();
-  } catch(e) {
-    errEl.style.display = 'flex';
-    errEl.textContent   = '❌ ' + e.message;
-  }
+    const rzp = new Razorpay(options); rzp.open();
+  } catch(e) { errEl.style.display='flex'; errEl.textContent='❌ '+e.message; }
 }
 
 // ════════════════════════════════════════
@@ -968,17 +878,14 @@ function dbg(msg, type='info') {
     const d = document.createElement('div');
     d.className = 'debug-line ' + type;
     d.textContent = new Date().toLocaleTimeString() + ' › ' + msg;
-    box.appendChild(d);
-    box.scrollTop = box.scrollHeight;
+    box.appendChild(d); box.scrollTop = box.scrollHeight;
   }
   console.log('[InsightIQ]', msg);
 }
-function toggleDebug() {
-  document.getElementById('debugBox').classList.toggle('on');
-}
+function toggleDebug() { document.getElementById('debugBox').classList.toggle('on'); }
 
 // ════════════════════════════════════════
-// FILE UPLOAD
+// FILE UPLOAD — FIXED (no double trigger)
 // ════════════════════════════════════════
 function onDrop(e) {
   e.preventDefault();
@@ -990,14 +897,11 @@ function onFileChange(file) {
   if (!file) return;
   if (!AUTH.token) { openAuth('login'); return; }
   const ext = file.name.split('.').pop().toLowerCase();
-
-  // ── Block PDF uploads ──
   if (ext === 'pdf') {
     showErr('⚠️ PDF files are not supported. Please upload a CSV or Excel (.xlsx / .xls) file only.');
     document.getElementById('fi').value = '';
     return;
   }
-
   const icons = { csv:'📊', xlsx:'📈', xls:'📈' };
   document.getElementById('fp-icon').textContent = icons[ext] || '📄';
   document.getElementById('fp-name').textContent = file.name;
@@ -1019,97 +923,53 @@ async function doUpload(file) {
   statusEl.style.display = 'flex';
   statusEl.textContent   = '⏳ Uploading and parsing file...';
   dbg('Uploading: ' + file.name);
-
   const fd = new FormData();
   fd.append('file', file);
-
   try {
     const res  = await fetch('/upload', { method:'POST', headers: authHeaders(), body: fd });
     const text = await res.text();
     dbg('Upload status: ' + res.status);
-
-    // Handle auth / payment errors
-    if (res.status === 401) {
-      statusEl.style.display = 'none';
-      openAuth('login');
-      return;
-    }
-    if (res.status === 402) {
-      statusEl.style.display = 'none';
-      openPayModal();
-      return;
-    }
-
+    if (res.status === 401) { statusEl.style.display='none'; openAuth('login'); return; }
+    if (res.status === 402) { statusEl.style.display='none'; openPayModal(); return; }
     let data;
     try { data = JSON.parse(text); }
     catch(e) { showErr('Server returned invalid response'); statusEl.style.display='none'; return; }
-
-    if (!res.ok) {
-      showErr('Upload failed: ' + (data.detail || text));
-      statusEl.style.display = 'none';
-      return;
-    }
-
+    if (!res.ok) { showErr('Upload failed: '+(data.detail||text)); statusEl.style.display='none'; return; }
     S.sid = data.session_id;
     statusEl.style.display = 'none';
-    dbg('Upload OK — session: ' + S.sid + ' | ' + data.shape.rows + 'r × ' + data.shape.cols + 'c', 'ok');
-
-    // Update uploads left in nav
+    dbg('Upload OK — session: '+S.sid+' | '+data.shape.rows+'r × '+data.shape.cols+'c', 'ok');
     if (data.uploads_left !== undefined) {
       const pill = document.getElementById('navUploads');
       const left = data.uploads_left;
       pill.textContent = `${left} upload${left!==1?'s':''} left`;
-      pill.className   = 'upload-pill';
+      pill.className = 'upload-pill';
       if (left === 0) pill.classList.add('danger');
       else if (left <= 2) pill.classList.add('warn');
-      document.getElementById('uploadQuota').textContent =
-        left === 0 ? '🔒 No uploads left' : `${left} upload${left!==1?'s':''} remaining`;
     }
-
     document.getElementById('fp-meta').textContent =
       `${data.shape.rows} rows × ${data.shape.cols} cols · ${file.name.split('.').pop().toUpperCase()}`;
-
-    // Show PDF→CSV button if PDF was uploaded
-    const pdfBox = document.getElementById('pdfCsvBox');
-    if (file.name.toLowerCase().endsWith('.pdf')) {
-      pdfBox.style.display = 'flex';
-    } else {
-      pdfBox.style.display = 'none';
-    }
-
     const sel = document.getElementById('targetSel');
     sel.innerHTML = '<option value="">— Select target column —</option>';
     data.columns.forEach(c => {
-      const o = document.createElement('option');
-      o.value = c; o.textContent = c;
-      sel.appendChild(o);
+      const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o);
     });
-
     const badges = document.getElementById('colBadges');
     badges.innerHTML = '';
     data.columns.forEach(c => {
-      const mis  = data.missing[c] || 0;
+      const mis = data.missing[c] || 0;
       const span = document.createElement('span');
-      span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:3px 9px;' +
-        'border-radius:99px;font-family:var(--fm);font-size:.69rem;' +
-        'background:var(--card);border:1px solid var(--border)';
-      span.innerHTML = `${c} <span style="color:var(--muted)">${data.dtypes[c]}</span>` +
-        (mis > 0 ? ` <span style="color:var(--amber)">${mis}✗</span>` : '');
+      span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-family:var(--fm);font-size:.69rem;background:var(--card);border:1px solid var(--border)';
+      span.innerHTML = `${c} <span style="color:var(--muted)">${data.dtypes[c]}</span>`+(mis>0?` <span style="color:var(--amber)">${mis}✗</span>`:'');
       badges.appendChild(span);
     });
-
     const cols = data.columns;
     document.getElementById('sHead').innerHTML = `<tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr>`;
-    document.getElementById('sBody').innerHTML = data.sample.map(row =>
-      `<tr>${cols.map(c=>`<td>${row[c]}</td>`).join('')}</tr>`
-    ).join('');
-
+    document.getElementById('sBody').innerHTML = data.sample.map(row=>`<tr>${cols.map(c=>`<td>${row[c]}</td>`).join('')}</tr>`).join('');
     document.getElementById('colPreview').style.display = 'block';
-    document.getElementById('step2').style.display      = 'block';
-
+    document.getElementById('step2').style.display = 'block';
   } catch(e) {
-    dbg('Upload exception: ' + e.message, 'err');
-    showErr('Network error: ' + e.message);
+    dbg('Upload exception: '+e.message,'err');
+    showErr('Network error: '+e.message);
     document.getElementById('uploadStatus').style.display = 'none';
   }
 }
@@ -1134,31 +994,23 @@ async function loadKPI() {
   try {
     const res  = await fetch(`/kpi/${S.sid}`, { headers: authHeaders() });
     const data = await res.json();
-    if (!res.ok) {
-      div.innerHTML = `<div class="alert al-err">❌ KPI Error: ${data.detail||'Failed to load'}</div>`;
-      return;
-    }
+    if (!res.ok) { div.innerHTML=`<div class="alert al-err">❌ ${data.detail||'Failed'}</div>`; return; }
     renderKPI(data.kpis || {});
-  } catch(e) {
-    div.innerHTML = `<div class="alert al-err">❌ ${e.message}</div>`;
-  }
+  } catch(e) { div.innerHTML=`<div class="alert al-err">❌ ${e.message}</div>`; }
 }
 
 function _fmt(v) {
   if (v===undefined||v===null) return '—';
-  const n=parseFloat(v);
-  if (isNaN(n)) return v;
-  if (Math.abs(n)>=1e9)  return (n/1e9).toFixed(1)+'B';
-  if (Math.abs(n)>=1e6)  return (n/1e6).toFixed(1)+'M';
-  if (Math.abs(n)>=1e3)  return (n/1e3).toFixed(1)+'K';
+  const n=parseFloat(v); if(isNaN(n)) return v;
+  if(Math.abs(n)>=1e9) return (n/1e9).toFixed(1)+'B';
+  if(Math.abs(n)>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(Math.abs(n)>=1e3) return (n/1e3).toFixed(1)+'K';
   return n.toLocaleString(undefined,{maximumFractionDigits:2});
 }
 
 function renderKPI(kpis) {
   const div = document.getElementById('kpiDash');
   let html = '';
-
-  // ── Summary row ──
   const sum = kpis.summary || {};
   html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
     <div class="card" style="text-align:center">
@@ -1177,101 +1029,64 @@ function renderKPI(kpis) {
       <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Missing Cells</div>
     </div>
   </div>`;
-
-  // ── Revenue KPIs ──
   const revCols = Object.keys(kpis).filter(k=>kpis[k]&&kpis[k].type==='revenue');
   if (revCols.length) {
     html += `<div class="stitle" style="margin-bottom:12px">💰 Key Business Metrics</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">`;
     revCols.forEach(col => {
       const k=kpis[col];
-      html += `<div class="card">
+      html+=`<div class="card">
         <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${col}</div>
         <div style="font-family:var(--fd);font-size:1.6rem;font-weight:800;color:var(--green);margin-bottom:4px">${_fmt(k.total)}</div>
         <div style="font-size:.78rem;color:var(--muted)">Total</div>
         <div style="height:1px;background:var(--border);margin:10px 0"></div>
         <div style="display:flex;justify-content:space-between;font-size:.79rem">
-          <span>Avg: <b>${_fmt(k.average)}</b></span>
-          <span>Max: <b>${_fmt(k.max)}</b></span>
-        </div>
-      </div>`;
+          <span>Avg: <b>${_fmt(k.average)}</b></span><span>Max: <b>${_fmt(k.max)}</b></span>
+        </div></div>`;
     });
     html += '</div>';
   }
-
-  // ── Growth ──
   if (kpis.growth) {
     const g=kpis.growth; const up=g.growth_pct>=0;
-    html += `<div class="card" style="margin-bottom:18px">
+    html+=`<div class="card" style="margin-bottom:18px">
       <div class="stitle">📈 Growth Analysis — ${g.column}</div>
       <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-        <div style="text-align:center">
-          <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">First Half Avg</div>
-          <div style="font-family:var(--fd);font-size:1.3rem;font-weight:800">${_fmt(g.first_half_avg)}</div>
-        </div>
+        <div style="text-align:center"><div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">First Half Avg</div>
+        <div style="font-family:var(--fd);font-size:1.3rem;font-weight:800">${_fmt(g.first_half_avg)}</div></div>
         <div style="font-size:2rem">${up?'📈':'📉'}</div>
-        <div style="text-align:center">
-          <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Second Half Avg</div>
-          <div style="font-family:var(--fd);font-size:1.3rem;font-weight:800">${_fmt(g.second_half_avg)}</div>
-        </div>
+        <div style="text-align:center"><div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Second Half Avg</div>
+        <div style="font-family:var(--fd);font-size:1.3rem;font-weight:800">${_fmt(g.second_half_avg)}</div></div>
         <div style="margin-left:auto;text-align:right">
           <div style="font-family:var(--fd);font-size:1.5rem;font-weight:800;color:${up?'var(--green)':'var(--red)'}">${up?'+':''}${g.growth_pct}%</div>
-          <div style="font-size:.76rem;color:var(--muted)">${up?'Positive growth trend ✅':'Declining trend ⚠️'}</div>
+          <div style="font-size:.76rem;color:var(--muted)">${up?'Positive growth ✅':'Declining ⚠️'}</div>
         </div>
-      </div>
+      </div></div>`;
+  }
+  if (!revCols.length && !kpis.growth) {
+    html+=`<div class="alert al-warn" style="display:flex">
+      ℹ️ No revenue/target columns auto-detected. Rename columns (e.g. "revenue", "sales") for better KPI detection.
     </div>`;
   }
-
-  // ── Target vs Actual ──
-  if (kpis.target_vs_actual) {
-    const tva=kpis.target_vs_actual; const pct=Math.min(100,tva.achievement_pct||0);
-    const bColor=pct>=90?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
-    html += `<div class="card" style="margin-bottom:18px">
-      <div class="stitle">🎯 Target vs Actual Achievement</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-        <div style="font-size:.84rem">Target (<b>${tva.target_col}</b>): <b>${_fmt(tva.target_total)}</b></div>
-        <div style="font-size:.84rem">Achieved (<b>${tva.actual_col}</b>): <b>${_fmt(tva.actual_total)}</b></div>
-        <div style="font-family:var(--fd);font-size:1.2rem;font-weight:800;color:${bColor}">${tva.achievement_pct}% achieved</div>
-      </div>
-      <div class="tva-bar"><div class="tva-fill" style="width:${pct}%;background:${bColor}"></div></div>
-      <div style="font-size:.79rem;color:var(--muted);margin-top:8px">
-        ${pct>=90?'✅ Excellent — very close to target!' : pct>=70?'⚠️ Good progress — push a bit more!' : '🚨 Far from target — review strategy!'}
-      </div>
-    </div>`;
-  }
-
-  if (!revCols.length && !kpis.growth && !kpis.target_vs_actual) {
-    html += `<div class="alert al-warn" style="display:flex">
-      ℹ️ No revenue/target/sales columns auto-detected. 
-      Rename your columns (e.g. "revenue", "sales", "target", "actual") for better KPI detection.
-      <br><br>Basic stats are shown above.
-    </div>`;
-  }
-
   div.innerHTML = html;
 }
 
 // ════════════════════════════════════════
-// LLM INSIGHT LOADER (per chart)
+// LLM INSIGHT
 // ════════════════════════════════════════
 async function loadLLMInsight(chartTitle, ruleInsight, cardEl) {
   if (!S.sid || !ruleInsight) return;
   try {
     const res  = await fetch('/llm-insight', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ session_id:S.sid, chart_title:chartTitle, chart_data:ruleInsight })
     });
     const data = await res.json();
-    if (data.insight) {
-      const box = cardEl.querySelector('.chart-insight');
-      if (box) box.innerHTML = '🤖 ' + data.insight;
-    }
-  } catch(e) { /* keep rule-based */ }
+    if (data.insight) { const box=cardEl.querySelector('.chart-insight'); if(box) box.innerHTML='🤖 '+data.insight; }
+  } catch(e) {}
 }
 
 // ════════════════════════════════════════
-// PREDICT FUTURE TRENDS
+// TREND MODAL
 // ════════════════════════════════════════
 function openTrendModal() {
   if (!S.sid) { alert('Please upload a file first!'); return; }
@@ -1279,46 +1094,25 @@ function openTrendModal() {
   document.getElementById('trendResult').style.display  = 'none';
   document.getElementById('trendLoading').style.display = 'none';
 }
-function closeTrendModal() {
-  document.getElementById('trendModal').classList.remove('on');
-}
+function closeTrendModal() { document.getElementById('trendModal').classList.remove('on'); }
 async function doTrendPredict() {
   const n = parseInt(document.getElementById('nFutureInp').value) || 10;
   document.getElementById('trendLoading').style.display = 'block';
   document.getElementById('trendResult').style.display  = 'none';
   try {
     const res  = await fetch('/predict-trends', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify({ session_id: S.sid, n_future: n })
+      method:'POST', headers:{'Content-Type':'application/json',...authHeaders()},
+      body: JSON.stringify({ session_id:S.sid, n_future:n })
     });
     const data = await res.json();
     document.getElementById('trendLoading').style.display = 'none';
-    if (!res.ok) { alert('Error: ' + (data.detail||'Prediction failed')); return; }
+    if (!res.ok) { alert('Error: '+(data.detail||'Failed')); return; }
     document.getElementById('trendResult').style.display = 'block';
-    document.getElementById('trendImg').src = 'data:image/png;base64,' + data.image;
-    const insDiv = document.getElementById('trendInsights');
-    insDiv.innerHTML = '<b>📊 What is predicted?</b><br><br>' +
-      (data.insights||[]).map(i => '• ' + i).join('<br>') +
-      `<br><br><span style="color:var(--muted);font-size:.75rem">
-        ⚠️ Predictions are based on historical data patterns. 
-        Real-world results may vary due to external factors.
-      </span>`;
-  } catch(e) {
-    document.getElementById('trendLoading').style.display = 'none';
-    alert('Network error: ' + e.message);
-  }
-}
-
-// ════════════════════════════════════════
-// PDF → CSV DOWNLOAD
-// ════════════════════════════════════════
-async function downloadPdfCsv() {
-  if (!S.sid) { alert('No active session!'); return; }
-  const url = `/download-pdf-csv/${S.sid}`;
-  const a = document.createElement('a');
-  a.href = url; a.download = 'insightiq_pdf_data.csv';
-  document.body.appendChild(a); a.click(); a.remove();
+    document.getElementById('trendImg').src = 'data:image/png;base64,'+data.image;
+    document.getElementById('trendInsights').innerHTML =
+      '<b>📊 What is predicted?</b><br><br>'+(data.insights||[]).map(i=>'• '+i).join('<br>')+
+      `<br><br><span style="color:var(--muted);font-size:.75rem">⚠️ Predictions are based on historical patterns. Real-world results may vary.</span>`;
+  } catch(e) { document.getElementById('trendLoading').style.display='none'; alert('Network error: '+e.message); }
 }
 
 // ════════════════════════════════════════
@@ -1327,66 +1121,48 @@ async function downloadPdfCsv() {
 async function doTrain() {
   if (!S.sid || !S.target) { showErr('Session or target missing!'); return; }
   showErr('');
-
-  const steps = ['st1','st2','st3','st4','st5','st6'];
-  const pcts  = [10,25,42,58,80,95];
-  const txts  = ['Parsing file...','Cleaning data...','Generating EDA charts...','Feature selection...','Training ML models...','Evaluating best model...'];
-
-  document.getElementById('progWrap').style.display = 'block';
-  document.getElementById('trainBtn').disabled = true;
-
-  let i = 0;
+  const steps=['st1','st2','st3','st4','st5','st6'];
+  const pcts=[10,25,42,58,80,95];
+  const txts=['Parsing file...','Cleaning data...','Generating EDA charts...','Feature selection...','Training ML models...','Evaluating best model...'];
+  document.getElementById('progWrap').style.display='block';
+  document.getElementById('trainBtn').disabled=true;
+  let i=0;
   function tick() {
-    if (i > 0) document.getElementById(steps[i-1]).className = 'step-item done';
-    if (i < steps.length) {
-      document.getElementById(steps[i]).className = 'step-item act';
-      document.getElementById('progTxt').textContent = txts[i];
-      document.getElementById('progPct').textContent = pcts[i] + '%';
-      document.getElementById('pf').style.width = pcts[i] + '%';
+    if(i>0) document.getElementById(steps[i-1]).className='step-item done';
+    if(i<steps.length){
+      document.getElementById(steps[i]).className='step-item act';
+      document.getElementById('progTxt').textContent=txts[i];
+      document.getElementById('progPct').textContent=pcts[i]+'%';
+      document.getElementById('pf').style.width=pcts[i]+'%';
       i++;
     }
   }
   tick();
-  const iv = setInterval(tick, 2000);
-
-  const fd = new FormData();
-  fd.append('session_id', S.sid);
-  fd.append('task_type',  S.task);
-  fd.append('target_col', S.target);
-
+  const iv=setInterval(tick,2000);
+  const fd=new FormData();
+  fd.append('session_id',S.sid); fd.append('task_type',S.task); fd.append('target_col',S.target);
   try {
-    const res  = await fetch('/train', { method:'POST', body: fd });
-    const text = await res.text();
+    const res=await fetch('/train',{method:'POST',body:fd});
+    const text=await res.text();
     clearInterval(iv);
-
     let data;
-    try { data = JSON.parse(text); }
-    catch(e) { showErr('Server error: ' + text.slice(0,200)); document.getElementById('trainBtn').disabled=false; return; }
-
-    if (!res.ok) {
-      showErr('Training failed: ' + (data.detail || JSON.stringify(data).slice(0,200)));
-      document.getElementById('trainBtn').disabled = false;
-      return;
-    }
-
-    steps.forEach(s => document.getElementById(s).className = 'step-item done');
-    document.getElementById('pf').style.width = '100%';
-    document.getElementById('progPct').textContent = '100%';
-    document.getElementById('progTxt').textContent = '✅ Done!';
-
-    S.featCols   = data.feature_cols   || [];
-    S.featDtypes = data.feature_dtypes || {};
-
-    try { renderResults(data); } catch(e) { dbg('renderResults error: '+e.message,'err'); }
-    unlock('results'); unlock('predict'); unlock('chat');
+    try{data=JSON.parse(text);}
+    catch(e){showErr('Server error: '+text.slice(0,200));document.getElementById('trainBtn').disabled=false;return;}
+    if(!res.ok){showErr('Training failed: '+(data.detail||JSON.stringify(data).slice(0,200)));document.getElementById('trainBtn').disabled=false;return;}
+    steps.forEach(s=>document.getElementById(s).className='step-item done');
+    document.getElementById('pf').style.width='100%';
+    document.getElementById('progPct').textContent='100%';
+    document.getElementById('progTxt').textContent='✅ Done!';
+    S.featCols=data.feature_cols||[]; S.featDtypes=data.feature_dtypes||{};
+    try{renderResults(data);}catch(e){dbg('renderResults error: '+e.message,'err');}
+    unlock('results');unlock('predict');unlock('chat');
     gp('results');
-    try { buildPredForm(); } catch(e) {}
-    document.getElementById('chatSt').textContent = 'Ready — ' + S.target + ' dataset';
-
+    try{buildPredForm();}catch(e){}
+    document.getElementById('chatSt').textContent='Ready — '+S.target+' dataset';
   } catch(e) {
     clearInterval(iv);
-    showErr('Network error: ' + e.message);
-    document.getElementById('trainBtn').disabled = false;
+    showErr('Network error: '+e.message);
+    document.getElementById('trainBtn').disabled=false;
   }
 }
 
@@ -1394,423 +1170,162 @@ async function doTrain() {
 // RENDER RESULTS
 // ════════════════════════════════════════
 function _scoreGrade(pct) {
-  if (pct >= 90) return { grade:'A+', color:'var(--green)',  verdict:'Excellent',  emoji:'🏆' };
-  if (pct >= 80) return { grade:'A',  color:'var(--teal)',   verdict:'Very Good',  emoji:'✅' };
-  if (pct >= 70) return { grade:'B',  color:'var(--teal2)',  verdict:'Good',       emoji:'👍' };
-  if (pct >= 60) return { grade:'C',  color:'var(--amber)',  verdict:'Decent',     emoji:'⚠️' };
-  if (pct >= 0)  return { grade:'D',  color:'var(--red)',    verdict:'Needs Work', emoji:'❌' };
-  // FIX #5: Negative R² — model worse than guessing mean
-  return              { grade:'F',  color:'var(--red)',    verdict:'Model Failed', emoji:'🚨' };
+  if(pct>=90) return{grade:'A+',color:'var(--green)', verdict:'Excellent',  emoji:'🏆'};
+  if(pct>=80) return{grade:'A', color:'var(--teal)',  verdict:'Very Good',  emoji:'✅'};
+  if(pct>=70) return{grade:'B', color:'var(--teal2)', verdict:'Good',       emoji:'👍'};
+  if(pct>=60) return{grade:'C', color:'var(--amber)', verdict:'Decent',     emoji:'⚠️'};
+  if(pct>=0)  return{grade:'D', color:'var(--red)',   verdict:'Needs Work', emoji:'❌'};
+  return             {grade:'F', color:'var(--red)',   verdict:'Model Failed',emoji:'🚨'};
 }
-
 function _barColor(pct) {
-  if (pct >= 80) return 'var(--green)';
-  if (pct >= 60) return 'var(--amber)';
+  if(pct>=80) return 'var(--green)';
+  if(pct>=60) return 'var(--amber)';
   return 'var(--red)';
 }
 
 function renderResults(data) {
-  document.getElementById('rSub').textContent =
+  document.getElementById('rSub').textContent=
     `${(data.task_type||'').toUpperCase()} · Predicting: ${data.target_col} · Best Model: ${data.best_model}`;
-
-  // ── Cleaning Alert ──
-  const cr = data.cleaning_report || {};
-  const parts = [];
-  if ((cr.duplicates_removed||0)>0) parts.push(`${cr.duplicates_removed} duplicate rows removed`);
-  if (Object.keys(cr.outliers_capped||{}).length) {
-    // FIX #11: Show which columns were capped
-    const cappedCols = Object.keys(cr.outliers_capped||{}).join(', ');
-    parts.push(`Outliers capped in: ${cappedCols}`);
-  }
-  if (Object.keys(cr.missing_before||{}).length)  parts.push('Missing values filled in');
-  if ((cr.numeric_class_rows_dropped||0)>0) parts.push(`${cr.numeric_class_rows_dropped} corrupted rows removed`);
-  if (parts.length) {
-    const a = document.getElementById('cleanAlert');
-    a.style.display = 'flex';
-    a.textContent = '🧹 Auto-cleaned: ' + parts.join(' · ');
-  }
-
-  // ── EDA Charts ──
-  const edaDiv = document.getElementById('edaCharts');
-  edaDiv.innerHTML = '';
-  (data.eda_charts||[]).forEach((ch,idx) => {
-    const div = document.createElement('div');
-    div.className = 'chart-card' + (idx===0?' full':'');
-    div.innerHTML = `<div class="chart-ttl">${ch.title}</div>
+  const cr=data.cleaning_report||{};
+  const parts=[];
+  if((cr.duplicates_removed||0)>0) parts.push(`${cr.duplicates_removed} duplicate rows removed`);
+  if(Object.keys(cr.outliers_capped||{}).length) parts.push('Extreme values capped');
+  if(Object.keys(cr.missing_before||{}).length)  parts.push('Missing values filled in');
+  if(parts.length){const a=document.getElementById('cleanAlert');a.style.display='flex';a.textContent='🧹 Auto-cleaned: '+parts.join(' · ');}
+  const edaDiv=document.getElementById('edaCharts'); edaDiv.innerHTML='';
+  (data.eda_charts||[]).forEach((ch,idx)=>{
+    const div=document.createElement('div');
+    div.className='chart-card'+(idx===0?' full':'');
+    div.innerHTML=`<div class="chart-ttl">${ch.title}</div>
       <img src="data:image/png;base64,${ch.image}" alt="${ch.title}" loading="lazy"/>
-      ${ch.insight ? `<div class="chart-insight">💬 ${ch.insight}</div>` : ''}`;
+      ${ch.insight?`<div class="chart-insight">💬 ${ch.insight}</div>`:''}`;
     edaDiv.appendChild(div);
-    if (ch.insight) setTimeout(()=>loadLLMInsight(ch.title, ch.insight, div), idx*900);
+    if(ch.insight) setTimeout(()=>loadLLMInsight(ch.title,ch.insight,div),idx*900);
   });
-  document.getElementById('trendBtn').style.display = 'inline-flex';
-
-  // ── Summary Card — FIX #5 R² negative, FIX #6 no "production ready" ──
-  const m  = data.metrics || {};
-  const tt = data.task_type;
-  const r2_raw = m.r2_score || 0;
-
-  // FIX #5: Don't clip negative R² to 0 — show the real score
-  const mainScore = tt==='classification'
-    ? (m.accuracy||0)
-    : (r2_raw >= 0 ? r2_raw*100 : -1); // -1 triggers F grade
-
-  const g = _scoreGrade(mainScore);
-
-  document.getElementById('summaryCard').style.display = 'block';
-  document.getElementById('sumGrade').textContent      = g.grade;
-  document.getElementById('sumGrade').style.color      = g.color;
-
-  // FIX #6: Remove "Model is ready!" — be honest about limitations
-  const isImbalanced = (m.accuracy||0) > (m.f1_score||0) + 10;
-  let verdictNote = '';
-  if (tt==='classification' && isImbalanced) {
-    verdictNote = ' — but data may be imbalanced (check F1 Score)';
-  }
-  document.getElementById('sumVerdict').textContent = `${g.emoji} ${g.verdict}${verdictNote}`;
-
-  if (tt === 'classification') {
-    const acc = m.accuracy||0; const f1 = m.f1_score||0;
-    // FIX #8: Honest CV label — mention it's on training data
-    const cvNote = `CV Accuracy (${m.cv_accuracy||0}%) is measured on training data splits — useful for comparison but not a final test score.`;
-    // FIX #6: No "production ready" claim
-    const perfNote = acc >= 85 ? `Strong performance — validate on your real business data before deploying.`
-                   : acc >= 70 ? `Decent performance — consider more data or feature engineering.`
-                   :             `Low accuracy — check data quality, class balance, and feature relevance.`;
-    document.getElementById('sumExplain').innerHTML =
+  document.getElementById('trendBtn').style.display='inline-flex';
+  const m=data.metrics||{};
+  const tt=data.task_type;
+  const r2_raw=m.r2_score||0;
+  const mainScore=tt==='classification'?(m.accuracy||0):(r2_raw>=0?r2_raw*100:-1);
+  const g=_scoreGrade(mainScore);
+  document.getElementById('summaryCard').style.display='block';
+  document.getElementById('sumGrade').textContent=g.grade;
+  document.getElementById('sumGrade').style.color=g.color;
+  document.getElementById('sumVerdict').textContent=`${g.emoji} ${g.verdict}`;
+  if(tt==='classification'){
+    const acc=m.accuracy||0; const f1=m.f1_score||0;
+    document.getElementById('sumExplain').innerHTML=
       `Out of every <strong>100 predictions</strong>, about <strong style="color:${g.color}">${Math.round(acc)} are correct</strong>. `+
-      `${perfNote} <br><small style="color:var(--muted)">${cvNote}</small>`;
-    document.getElementById('sumInsights').innerHTML =
+      (acc>=85?'Strong performance — validate on real business data before deploying.':
+       acc>=70?'Decent — consider more data or feature engineering.':'Low accuracy — check data quality and class balance.');
+    document.getElementById('sumInsights').innerHTML=
       `<span class="insight-pill">🎯 Accuracy: ${acc}%</span>
        <span class="insight-pill">⚖️ F1 Score: ${f1}%</span>
-       <span class="insight-pill">🤖 Best: ${data.best_model}</span>
-       ${isImbalanced?'<span class="insight-pill" style="color:var(--amber)">⚠️ Possible imbalance</span>':''}`;
+       <span class="insight-pill">🤖 Best: ${data.best_model}</span>`;
   } else {
-    // FIX #5: Show actual R² including negative
-    const r2disp = r2_raw.toFixed(4);
-    const rmse   = m.rmse||0;
-    let r2explain = '';
-    if (r2_raw < 0) {
-      r2explain = `<strong style="color:var(--red)">⚠️ R² is negative (${r2disp}) — the model performs worse than simply predicting the average.</strong> Try different features or more data.`;
-    } else {
-      const r2pct = (r2_raw*100).toFixed(1);
-      r2explain = `Model explains <strong style="color:${g.color}">${r2pct}% of the variation</strong>. `+
-        `Average prediction error: <strong>${rmse}</strong> units (RMSE). `+
-        (r2_raw>=0.8?`Strong fit.`:r2_raw>=0.6?`Decent fit.`:`Weak fit — more features or data may help.`);
-    }
-    // FIX #8: Honest CV note
-    const cvNote = `CV R² (${m.cv_r2||0}) measured on training splits — not a final holdout test.`;
-    document.getElementById('sumExplain').innerHTML =
-      r2explain + ` <br><small style="color:var(--muted)">${cvNote}</small>`;
-    document.getElementById('sumInsights').innerHTML =
+    const r2disp=r2_raw.toFixed(4); const rmse=m.rmse||0;
+    let r2explain=r2_raw<0
+      ?`<strong style="color:var(--red)">⚠️ R² is negative (${r2disp}) — model performs worse than predicting the average.</strong> Try different features.`
+      :`Model explains <strong style="color:${g.color}">${(r2_raw*100).toFixed(1)}% of variation</strong>. Avg error: <strong>${rmse}</strong> units (RMSE).`;
+    document.getElementById('sumExplain').innerHTML=r2explain;
+    document.getElementById('sumInsights').innerHTML=
       `<span class="insight-pill">📈 R²: ${r2disp}</span>
        <span class="insight-pill">📏 RMSE: ${rmse}</span>
-       <span class="insight-pill">🤖 Best: ${data.best_model}</span>
-       ${r2_raw<0?'<span class="insight-pill" style="color:var(--red)">🚨 Model needs work</span>':''}`;
+       <span class="insight-pill">🤖 Best: ${data.best_model}</span>`;
   }
-
-  // ── Metric Cards — FIX #8 CV label, FIX #5 R² ──
-  const mGrid = document.getElementById('mGrid');
-  mGrid.innerHTML = '';
-
-  const metaInfo = {
-    'Accuracy':    { desc:'Out of 100 predictions, how many are correct?' },
-    'F1 Score':    { desc:'Balances precision & recall — better metric for imbalanced data' },
-    'Precision':   { desc:'When model predicts YES, how often is it actually YES?' },
-    // FIX #8: Honest CV description
-    'CV Accuracy': { desc:'Cross-validation on training data (5 splits) — for model comparison only', lower:false },
-    'R² Score':    { desc:'How much variation the model explains (negative = worse than baseline)', lower:false },
-    'RMSE':        { desc:'Average prediction error — lower is better', lower:true },
-    'MAE':         { desc:'Typical error size in target units — lower is better', lower:true },
-    'CV R²':       { desc:'Cross-validation R² on training data — for model comparison only', lower:false },
-  };
-
-  const items = tt==='classification'
-    ? [{lbl:'Accuracy',    val:(m.accuracy||0),    col:'var(--green)' },
-       {lbl:'F1 Score',    val:(m.f1_score||0),    col:'var(--teal)'  },
-       {lbl:'Precision',   val:(m.precision||0),   col:'var(--amber)' },
-       {lbl:'CV Accuracy', val:(m.cv_accuracy||0), col:'var(--purple)'}]
-    : [{lbl:'R² Score',   val:r2_raw,         col: r2_raw<0?'var(--red)':'var(--green)'},
-       {lbl:'RMSE',        val:m.rmse||0,      col:'var(--amber)', lower:true },
-       {lbl:'MAE',         val:m.mae||0,       col:'var(--teal)',  lower:true },
-       {lbl:'CV R²',       val:m.cv_r2||0,    col:'var(--purple)'}];
-
-  items.forEach(it => {
-    const info = metaInfo[it.lbl] || {};
-    let displayVal, barPct, barColor;
-
-    if (it.lower) {
-      displayVal = it.val;
-      barPct = 0; barColor = 'var(--muted)';
-    } else if (it.lbl === 'R² Score' || it.lbl === 'CV R²') {
-      // FIX #5: Show actual R² value, don't hide negative
-      displayVal = it.val.toFixed(4);
-      barPct = it.val < 0 ? 0 : Math.min(100, it.val*100);
-      barColor = it.val < 0 ? 'var(--red)' : _barColor(barPct);
-    } else {
-      displayVal = it.val + '%';
-      barPct = Math.min(100, it.val);
-      barColor = _barColor(barPct);
-    }
-
-    const d = document.createElement('div');
-    d.className = 'm-card';
-    d.innerHTML = `
-      <div class="m-lbl">${it.lbl}</div>
+  const mGrid=document.getElementById('mGrid'); mGrid.innerHTML='';
+  const items=tt==='classification'
+    ?[{lbl:'Accuracy',   val:(m.accuracy||0),    col:'var(--green)',  pct:true},
+      {lbl:'F1 Score',   val:(m.f1_score||0),    col:'var(--teal)',   pct:true},
+      {lbl:'Precision',  val:(m.precision||0),   col:'var(--amber)',  pct:true},
+      {lbl:'CV Accuracy',val:(m.cv_accuracy||0), col:'var(--purple)', pct:true}]
+    :[{lbl:'R² Score',  val:r2_raw,       col:r2_raw<0?'var(--red)':'var(--green)',r2:true},
+      {lbl:'RMSE',       val:m.rmse||0,    col:'var(--amber)',  lower:true},
+      {lbl:'MAE',        val:m.mae||0,     col:'var(--teal)',   lower:true},
+      {lbl:'CV R²',      val:m.cv_r2||0, col:'var(--purple)', r2:true}];
+  const descs={'Accuracy':'Out of 100, how many predictions are correct?','F1 Score':'Balances precision & recall — better for imbalanced data','Precision':'When model says YES, how often is it actually YES?','CV Accuracy':'Tested across 5 data splits — more reliable estimate','R² Score':'How much variation does the model explain? (negative = worse than baseline)','RMSE':'Average prediction error — lower is better','MAE':'Typical mistake size in target units — lower is better','CV R²':'R² tested across 5 splits — for model comparison'};
+  items.forEach(it=>{
+    const displayVal=it.r2?it.val.toFixed(4):it.lower?it.val:it.val+'%';
+    const barPct=it.lower?0:it.r2?Math.max(0,it.val*100):Math.min(100,it.val);
+    const barColor=it.lower?'var(--muted)':it.r2&&it.val<0?'var(--red)':_barColor(barPct);
+    const d=document.createElement('div'); d.className='m-card';
+    d.innerHTML=`<div class="m-lbl">${it.lbl}</div>
       <div class="m-val" style="color:${it.col}">${displayVal}</div>
-      ${!it.lower ? `<div class="m-bar"><div class="m-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>` : ''}
-      <div class="metric-explain">${info.desc||''}</div>`;
+      ${!it.lower?`<div class="m-bar"><div class="m-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>`:''}
+      <div class="metric-explain">${descs[it.lbl]||''}</div>`;
     mGrid.appendChild(d);
   });
-
-  // ── Best Model Card ──
-  document.getElementById('bestMName').textContent = data.best_model || '—';
-  document.getElementById('bestMBadge').innerHTML  =
-    tt==='classification' ? '<span class="badge bg-p">CLASSIFICATION</span>'
-                          : '<span class="badge bg-t">REGRESSION</span>';
-
-  // ── All Models Table ──
-  const tbody = document.getElementById('modelTBody');
-  tbody.innerHTML = '';
-  const medals = ['🥇','🥈','🥉'];
-  const sorted = Object.entries(m.all_models||{}).sort((a,b)=>b[1]-a[1]);
-  sorted.forEach(([name,score],i) => {
-    const scoreStr = tt==='classification' ? score+'%' : (score||0).toFixed(4);
-    const tip = i===0 ? '← Selected for predictions' : '';
-    const bc  = i===0?'bg-g':i===1?'bg-t':'bg-a';
-    tbody.innerHTML += `<tr>
-      <td><strong>${name}</strong> <span style="font-size:.72rem;color:var(--muted)">${tip}</span></td>
-      <td><span class="badge ${bc}">${scoreStr}</span></td>
-      <td>${medals[i]||'#'+(i+1)}</td></tr>`;
+  document.getElementById('bestMName').textContent=data.best_model||'—';
+  document.getElementById('bestMBadge').innerHTML=tt==='classification'
+    ?'<span class="badge bg-p">CLASSIFICATION</span>'
+    :'<span class="badge bg-t">REGRESSION</span>';
+  const tbody=document.getElementById('modelTBody'); tbody.innerHTML='';
+  const medals=['🥇','🥈','🥉'];
+  Object.entries(m.all_models||{}).sort((a,b)=>b[1]-a[1]).forEach(([name,score],i)=>{
+    const scoreStr=tt==='classification'?score+'%':(score||0).toFixed(4);
+    const tip=i===0?'← Selected for predictions':'';
+    const bc=i===0?'bg-g':i===1?'bg-t':'bg-a';
+    tbody.innerHTML+=`<tr><td><strong>${name}</strong> <span style="font-size:.72rem;color:var(--muted)">${tip}</span></td>
+      <td><span class="badge ${bc}">${scoreStr}</span></td><td>${medals[i]||'#'+(i+1)}</td></tr>`;
   });
-
-  if (tt==='classification' && m.confusion_matrix) renderCM(m.confusion_matrix, m.classes||[]);
-  renderFI(data.feature_importance||{}, data.target_col, tt);
-}
-
-function _barColor(pct) {
-  if (pct >= 80) return 'var(--green)';
-  if (pct >= 60) return 'var(--amber)';
-  return 'var(--red)';
-}
-
-function renderResults(data) {
-  document.getElementById('rSub').textContent =
-    `${(data.task_type||'').toUpperCase()} · Predicting: ${data.target_col} · Best Model: ${data.best_model}`;
-
-  // ── Cleaning Alert ──
-  const cr = data.cleaning_report || {};
-  const parts = [];
-  if ((cr.duplicates_removed||0)>0) parts.push(`${cr.duplicates_removed} duplicate rows removed`);
-  if (Object.keys(cr.outliers_capped||{}).length) parts.push('Extreme values capped');
-  if (Object.keys(cr.missing_before||{}).length)  parts.push('Missing values filled in');
-  if ((cr.numeric_class_rows_dropped||0)>0)        parts.push(`${cr.numeric_class_rows_dropped} corrupted rows removed`);
-  if (parts.length) {
-    const a = document.getElementById('cleanAlert');
-    a.style.display = 'flex';
-    a.textContent = '🧹 Data was auto-cleaned: ' + parts.join(' · ');
-  }
-
-  // ── EDA Charts ──
-  const edaDiv = document.getElementById('edaCharts');
-  edaDiv.innerHTML = '';
-  (data.eda_charts||[]).forEach((ch,idx) => {
-    const div = document.createElement('div');
-    div.className = 'chart-card' + (idx===0?' full':'');
-    div.innerHTML = `<div class="chart-ttl">${ch.title}</div>
-      <img src="data:image/png;base64,${ch.image}" alt="${ch.title}" loading="lazy"/>
-      ${ch.insight ? `<div class="chart-insight">💬 ${ch.insight}</div>` : ''}`;
-    edaDiv.appendChild(div);
-    // Async LLM upgrade — replace rule-based with Claude insight
-    if (ch.insight) setTimeout(()=>loadLLMInsight(ch.title, ch.insight, div), idx*900);
-  });
-
-  document.getElementById('trendBtn').style.display = 'inline-flex';
-
-  // ── Summary Card ──
-  const m  = data.metrics || {};
-  const tt = data.task_type;
-  const mainScore = tt==='classification' ? (m.accuracy||0) : Math.max(0, (m.r2_score||0)*100);
-  const g  = _scoreGrade(mainScore);
-
-  document.getElementById('summaryCard').style.display = 'block';
-  document.getElementById('sumGrade').textContent      = g.grade;
-  document.getElementById('sumGrade').style.color      = g.color;
-  document.getElementById('sumVerdict').textContent    = `${g.emoji} ${g.verdict} — Model is ready!`;
-
-  if (tt === 'classification') {
-    const acc = m.accuracy||0;
-    const f1  = m.f1_score||0;
-    document.getElementById('sumExplain').innerHTML =
-      `Out of every <strong>100 predictions</strong>, the model gets about <strong style="color:${g.color}">${Math.round(acc)} correct</strong>. ` +
-      `It was tested on data it had never seen before, so this is a real-world estimate. ` +
-      (acc >= 80 ? `This model is reliable for production use.` :
-       acc >= 65 ? `Decent performance — may need more data or tuning.` :
-                   `Consider collecting more data or checking for data quality issues.`);
-    document.getElementById('sumInsights').innerHTML =
-      `<span class="insight-pill">🎯 Accuracy: ${acc}%</span>
-       <span class="insight-pill">⚖️ F1 Score: ${f1}%</span>
-       <span class="insight-pill">🤖 Best: ${data.best_model}</span>
-       <span class="insight-pill">📂 Task: Classification</span>`;
-  } else {
-    const r2   = m.r2_score||0;
-    const rmse = m.rmse||0;
-    const r2pct = Math.max(0, r2*100).toFixed(1);
-    document.getElementById('sumExplain').innerHTML =
-      `The model explains <strong style="color:${g.color}">${r2pct}% of the variation</strong> in your target column. ` +
-      `On average, predictions are off by about <strong>${rmse}</strong> units (RMSE). ` +
-      (r2 >= 0.8 ? `This is excellent fit — model is very reliable.` :
-       r2 >= 0.6 ? `Good fit for most use-cases.` :
-                   `Model struggles — try adding more features or more data.`);
-    document.getElementById('sumInsights').innerHTML =
-      `<span class="insight-pill">📈 R² Score: ${r2}</span>
-       <span class="insight-pill">📏 Avg Error (RMSE): ${rmse}</span>
-       <span class="insight-pill">🤖 Best: ${data.best_model}</span>
-       <span class="insight-pill">📂 Task: Regression</span>`;
-  }
-
-  // ── Metric Cards with explanations + progress bars ──
-  const mGrid = document.getElementById('mGrid');
-  mGrid.innerHTML = '';
-
-  const metaInfo = {
-    'Accuracy':    { desc:'Out of 100 predictions, how many are correct?',           pct: true  },
-    'F1 Score':    { desc:'Balance between finding all cases & avoiding false alarms', pct: true  },
-    'Precision':   { desc:'When model says YES, how often is it actually YES?',       pct: true  },
-    'CV Accuracy': { desc:'Score tested on 5 different data splits — more reliable',  pct: true  },
-    'R² Score':    { desc:'How much of the data pattern does the model explain?',     pct: false, scale: 100 },
-    'RMSE':        { desc:'Average prediction error (lower = better)',                pct: false, lower: true },
-    'MAE':         { desc:'Typical mistake size in your target unit (lower = better)', pct: false, lower: true },
-    'CV R²':       { desc:'R² tested on 5 different splits — more trustworthy',       pct: false, scale: 100 },
-  };
-
-  const items = tt==='classification'
-    ? [{lbl:'Accuracy',    val:(m.accuracy||0),     raw:(m.accuracy||0),    col:'var(--green)' },
-       {lbl:'F1 Score',    val:(m.f1_score||0),     raw:(m.f1_score||0),    col:'var(--teal)'  },
-       {lbl:'Precision',   val:(m.precision||0),    raw:(m.precision||0),   col:'var(--amber)' },
-       {lbl:'CV Accuracy', val:(m.cv_accuracy||0),  raw:(m.cv_accuracy||0), col:'var(--purple)'}]
-    : [{lbl:'R² Score',   val:m.r2_score||0,  raw:Math.max(0,(m.r2_score||0)*100), col:'var(--green)' },
-       {lbl:'RMSE',        val:m.rmse||0,      raw:0,                               col:'var(--amber)', lower:true },
-       {lbl:'MAE',         val:m.mae||0,       raw:0,                               col:'var(--teal)',  lower:true },
-       {lbl:'CV R²',       val:m.cv_r2||0,    raw:Math.max(0,(m.cv_r2||0)*100),   col:'var(--purple)'}];
-
-  items.forEach(it => {
-    const info     = metaInfo[it.lbl] || {};
-    const displayVal = (it.lbl==='R² Score'||it.lbl==='CV R²')
-      ? it.val.toFixed(4)
-      : it.lower ? it.val : it.val+'%';
-    const barPct   = it.lower ? 0 : Math.min(100, it.raw||it.val);
-    const barColor = it.lower ? 'var(--muted)' : _barColor(barPct);
-
-    const d = document.createElement('div');
-    d.className = 'm-card';
-    d.innerHTML = `
-      <div class="m-lbl">${it.lbl}</div>
-      <div class="m-val" style="color:${it.col}">${displayVal}</div>
-      ${!it.lower ? `<div class="m-bar"><div class="m-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>` : ''}
-      <div class="metric-explain">${info.desc||''}</div>`;
-    mGrid.appendChild(d);
-  });
-
-  // ── Best Model Card ──
-  document.getElementById('bestMName').textContent = data.best_model || '—';
-  document.getElementById('bestMBadge').innerHTML  =
-    tt==='classification' ? '<span class="badge bg-p">CLASSIFICATION</span>'
-                          : '<span class="badge bg-t">REGRESSION</span>';
-
-  // ── All Models Table ──
-  const tbody = document.getElementById('modelTBody');
-  tbody.innerHTML = '';
-  const medals = ['🥇','🥈','🥉'];
-  const sorted = Object.entries(m.all_models||{}).sort((a,b)=>b[1]-a[1]);
-  sorted.forEach(([name,score],i) => {
-    const scoreStr = tt==='classification' ? score+'%' : (score||0).toFixed(4);
-    const tip = i===0 ? '← Best model, used for predictions' : '';
-    const bc  = i===0?'bg-g':i===1?'bg-t':'bg-a';
-    tbody.innerHTML += `<tr>
-      <td><strong>${name}</strong> <span style="font-size:.72rem;color:var(--muted)">${tip}</span></td>
-      <td><span class="badge ${bc}">${scoreStr}</span></td>
-      <td>${medals[i]||'#'+(i+1)}</td></tr>`;
-  });
-
-  if (tt==='classification' && m.confusion_matrix) renderCM(m.confusion_matrix, m.classes||[]);
-  renderFI(data.feature_importance||{}, data.target_col, tt);
+  if(tt==='classification'&&m.confusion_matrix) renderCM(m.confusion_matrix,m.classes||[]);
+  renderFI(data.feature_importance||{},data.target_col,tt);
 }
 
 function rTab(btn,id) {
   document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   ['eda','kpi','ml','fi'].forEach(t=>document.getElementById('rt-'+t).style.display=t===id?'block':'none');
-  if (id==='kpi') loadKPI();
+  if(id==='kpi') loadKPI();
 }
 
-function renderCM(cm, classes) {
-  document.getElementById('cmCard').style.display = 'block';
-  const n = cm.length; const max = Math.max(...cm.flat())||1;
-  let html = '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">';
-  html += '<div style="display:flex;gap:3px"><div style="width:65px"></div>';
-  [...(classes.length?classes:Array.from({length:n},(_,i)=>i))].forEach(cls =>
-    html += `<div class="cm-cell" style="background:transparent;font-size:.7rem;color:var(--muted)">${cls}</div>`
-  );
-  html += '</div>';
-  cm.forEach((row,ri) => {
-    html += '<div style="display:flex;gap:3px;align-items:center">';
-    html += `<div style="width:65px;text-align:right;padding-right:7px;font-size:.7rem;color:var(--muted)">${classes[ri]||ri}</div>`;
-    row.forEach((val,ci) => {
-      const intensity = val/max;
-      const bg = ri===ci ? `rgba(61,219,138,${.12+intensity*.6})` : `rgba(255,77,109,${intensity*.45})`;
-      html += `<div class="cm-cell" style="background:${bg}">${val}</div>`;
+function renderCM(cm,classes) {
+  document.getElementById('cmCard').style.display='block';
+  const n=cm.length; const max=Math.max(...cm.flat())||1;
+  let html='<div style="display:flex;flex-direction:column;align-items:center;gap:3px">';
+  html+='<div style="display:flex;gap:3px"><div style="width:65px"></div>';
+  [...(classes.length?classes:Array.from({length:n},(_,i)=>i))].forEach(cls=>
+    html+=`<div style="width:52px;text-align:center;font-size:.7rem;color:var(--muted)">${cls}</div>`);
+  html+='</div>';
+  cm.forEach((row,ri)=>{
+    html+='<div style="display:flex;gap:3px;align-items:center">';
+    html+=`<div style="width:65px;text-align:right;padding-right:7px;font-size:.7rem;color:var(--muted)">${classes[ri]||ri}</div>`;
+    row.forEach((val,ci)=>{
+      const intensity=val/max;
+      const bg=ri===ci?`rgba(61,219,138,${.12+intensity*.6})`:`rgba(255,77,109,${intensity*.45})`;
+      html+=`<div style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:${bg};font-family:var(--fm);font-size:.85rem">${val}</div>`;
     });
-    html += '</div>';
+    html+='</div>';
   });
-  document.getElementById('cmWrap').innerHTML = html+'</div>';
+  document.getElementById('cmWrap').innerHTML=html+'</div>';
 }
 
-function renderFI(fi, targetCol, taskType) {
-  const rows  = document.getElementById('fiRows');
-  const empty = document.getElementById('fiEmpty');
-  rows.innerHTML = '';
-  const entries = Object.entries(fi);
-  if (!entries.length) { empty.style.display='block'; return; }
+function renderFI(fi,targetCol,taskType) {
+  const rows=document.getElementById('fiRows');
+  const empty=document.getElementById('fiEmpty');
+  rows.innerHTML='';
+  const entries=Object.entries(fi);
+  if(!entries.length){empty.style.display='block';return;}
   empty.style.display='none';
-
-  const sub = document.getElementById('fiSubtitle');
-  if (sub) sub.innerHTML =
-    `These columns have the biggest impact on predicting <strong>${targetCol||'the target'}</strong>. ` +
-    `The bar shows <em>relative importance</em> — the top feature is always 100% (baseline). ` +
-    `<small style="color:var(--muted)">Note: importance ≠ causation.</small>`;
-
-  // FIX #4: Compute relative importance correctly
-  const maxVal  = Math.max(...entries.map(e=>e[1]));
-  const sumVals = entries.reduce((s,e)=>s+e[1],0);
-  const ranks   = ['🥇 Most Important','🥈 2nd','🥉 3rd'];
-  const impacts = ['🔴 Very High','🟠 High','🟡 Medium','🟢 Supporting'];
-
-  entries.forEach(([name, val], i) => {
-    // Relative to max (bar width) — never shows fake "%" of model score
-    const relPct    = maxVal > 0 ? (val/maxVal*100) : 0;
-    // Share of total importance (actual contribution)
-    const sharePct  = sumVals > 0 ? (val/sumVals*100).toFixed(1) : '0.0';
-    const rank      = ranks[i] || `#${i+1}`;
-    const impact    = relPct>=75?impacts[0]:relPct>=45?impacts[1]:relPct>=20?impacts[2]:impacts[3];
-    const barColor  = relPct>=75?'var(--red)':relPct>=45?'var(--amber)':relPct>=20?'var(--teal)':'var(--green)';
-
-    const d = document.createElement('div');
-    d.style.marginBottom = '14px';
-    d.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:.78rem;color:var(--muted);min-width:115px">${rank}</span>
-          <span class="fi-lbl" title="${name}" style="color:var(--text);font-weight:600">${name}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:.72rem;color:var(--muted)">${impact}</span>
-          <!-- FIX #4: Show share of total, not fake raw*100 -->
-          <span class="fi-pct" title="${sharePct}% of total importance">${sharePct}%</span>
-        </div>
+  const sub=document.getElementById('fiSubtitle');
+  if(sub) sub.innerHTML=`These columns have the biggest impact on predicting <strong>${targetCol||'the target'}</strong>. Bar shows relative importance.`;
+  const maxVal=Math.max(...entries.map(e=>e[1]));
+  const sumVals=entries.reduce((s,e)=>s+e[1],0);
+  const ranks=['🥇 Most Important','🥈 2nd','🥉 3rd'];
+  entries.forEach(([name,val],i)=>{
+    const relPct=maxVal>0?(val/maxVal*100):0;
+    const sharePct=sumVals>0?(val/sumVals*100).toFixed(1):'0.0';
+    const rank=ranks[i]||`#${i+1}`;
+    const barColor=relPct>=75?'var(--red)':relPct>=45?'var(--amber)':relPct>=20?'var(--teal)':'var(--green)';
+    const d=document.createElement('div'); d.style.marginBottom='14px';
+    d.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.78rem;color:var(--muted);min-width:115px">${rank}</span>
+        <span style="font-size:.79rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px" title="${name}">${name}</span>
       </div>
-      <div class="fi-track">
-        <div class="fi-fill" style="width:${relPct}%;background:${barColor}"></div>
-      </div>`;
+      <span style="font-family:var(--fm);font-size:.73rem;color:var(--muted)">${sharePct}%</span>
+    </div>
+    <div class="fi-track"><div class="fi-fill" style="width:${relPct}%;background:${barColor}"></div></div>`;
     rows.appendChild(d);
   });
 }
@@ -1822,75 +1337,61 @@ function doDownload() {
   if (!S.sid) { alert('Train a model first!'); return; }
   window.location.href = `/download-cleaned/${S.sid}`;
 }
-function saveForComp() {
-  const lbl = prompt('Enter label (e.g. January_2024):');
-  if (!lbl || !S.sid) return;
-  const fd = new FormData();
-  fd.append('session_id', S.sid); fd.append('label', lbl);
-  fetch('/save-dataset', { method:'POST', headers: authHeaders(), body: fd })
-    .then(r => r.json())
-    .then(d => alert(`✅ Saved "${d.saved}" — ${d.rows} rows`))
-    .catch(e => alert('Error: '+e));
-}
 
 // ════════════════════════════════════════
 // PREDICT
 // ════════════════════════════════════════
 function buildPredForm() {
-  const form = document.getElementById('predForm');
-  form.innerHTML = '';
-  document.getElementById('predBtn').disabled = false;
-  if (!S.featCols.length) { form.innerHTML='<div style="color:var(--muted)">No features available.</div>'; return; }
-  S.featCols.forEach(col => {
-    const dtype = S.featDtypes[col]||'object';
-    const isNum = dtype.includes('int')||dtype.includes('float');
-    const div = document.createElement('div');
-    div.className = 'fg';
-    div.innerHTML = `<label class="flbl">${col} <span style="color:var(--muted);font-size:.65rem;text-transform:none">(${dtype})</span></label>
-      ${isNum ? `<input type="number" class="fc" id="pf_${col}" step="any" placeholder="Enter value..."/>`
-              : `<input type="text"   class="fc" id="pf_${col}" placeholder="Enter value..."/>`}`;
+  const form=document.getElementById('predForm'); form.innerHTML='';
+  document.getElementById('predBtn').disabled=false;
+  if(!S.featCols.length){form.innerHTML='<div style="color:var(--muted)">No features available.</div>';return;}
+  S.featCols.forEach(col=>{
+    const dtype=S.featDtypes[col]||'object';
+    const isNum=dtype.includes('int')||dtype.includes('float');
+    const div=document.createElement('div'); div.className='fg';
+    div.innerHTML=`<label class="flbl">${col} <span style="color:var(--muted);font-size:.65rem;text-transform:none">(${dtype})</span></label>
+      ${isNum?`<input type="number" class="fc" id="pf_${col}" step="any" placeholder="Enter value..."/>`
+             :`<input type="text"   class="fc" id="pf_${col}" placeholder="Enter value..."/>`}`;
     form.appendChild(div);
   });
 }
-
 async function doPrediction() {
-  if (!S.sid) { alert('No model trained.'); return; }
-  const features = {};
-  S.featCols.forEach(col => { const el=document.getElementById('pf_'+col); features[col]=el?el.value:''; });
+  if(!S.sid){alert('No model trained.');return;}
+  const features={};
+  S.featCols.forEach(col=>{const el=document.getElementById('pf_'+col);features[col]=el?el.value:'';});
   try {
-    const res  = await fetch('/predict', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({session_id:S.sid,features}) });
-    const data = await res.json();
-    if (!res.ok) { showPredErr(data.detail||'Prediction failed'); return; }
-    document.getElementById('predVal').textContent  = data.prediction;
-    document.getElementById('predMeta').textContent = S.task==='classification'?'Classification Result':'Regression Prediction';
-    const probaCard = document.getElementById('probaCard');
-    if (data.probabilities) {
-      probaCard.style.display = 'block';
-      const colors = ['#00E5C8','#00BFFF','#FF8C42','#9B5DE5','#FF4D6D','#3DDB8A'];
-      document.getElementById('probaBars').innerHTML = Object.entries(data.probabilities).map(([cls,pct],i)=>
+    const res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:S.sid,features})});
+    const data=await res.json();
+    if(!res.ok){showPredErr(data.detail||'Prediction failed');return;}
+    document.getElementById('predVal').textContent=data.prediction;
+    document.getElementById('predMeta').textContent=S.task==='classification'?'Classification Result':'Regression Prediction';
+    const probaCard=document.getElementById('probaCard');
+    if(data.probabilities){
+      probaCard.style.display='block';
+      const colors=['#00E5C8','#00BFFF','#FF8C42','#9B5DE5','#FF4D6D','#3DDB8A'];
+      document.getElementById('probaBars').innerHTML=Object.entries(data.probabilities).map(([cls,pct],i)=>
         `<div class="proba-row"><div class="proba-cls">${cls}</div>
         <div class="proba-track"><div class="proba-fill" style="width:${pct}%;background:${colors[i%colors.length]}"></div></div>
         <div class="proba-pct">${pct}%</div></div>`).join('');
     } else probaCard.style.display='none';
-  } catch(e) { showPredErr('Network error: '+e.message); }
+  } catch(e){showPredErr('Network error: '+e.message);}
 }
 
 // ════════════════════════════════════════
 // CHATBOT
 // ════════════════════════════════════════
-function qAsk(el) { document.getElementById('chatInp').value=el.textContent; sendMsg(); }
-async function sendMsg() {
+function qAsk(el){document.getElementById('chatInp').value=el.textContent;sendMsg();}
+async function sendMsg(){
   const inp=document.getElementById('chatInp'); const msg=inp.value.trim();
-  if (!msg) return; inp.value='';
-  addMsg(msg,'user');
-  const typing=addTyping();
-  try {
-    const res  = await fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({session_id:S.sid||'',question:msg}) });
-    const data = await res.json();
+  if(!msg) return; inp.value='';
+  addMsg(msg,'user'); const typing=addTyping();
+  try{
+    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:S.sid||'',question:msg})});
+    const data=await res.json();
     typing.remove(); addMsg(data.answer||'—','bot');
-  } catch(e) { typing.remove(); addMsg('⚠️ Error: '+e.message,'bot'); }
+  }catch(e){typing.remove();addMsg('⚠️ Error: '+e.message,'bot');}
 }
-function addMsg(text,role) {
+function addMsg(text,role){
   const wrap=document.getElementById('msgs'); const div=document.createElement('div');
   div.className='msg'+(role==='user'?' u':'');
   const now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -1899,7 +1400,7 @@ function addMsg(text,role) {
     <div><div class="bubble">${html}</div><div class="mtime">${now}</div></div>`;
   wrap.appendChild(div); wrap.scrollTop=wrap.scrollHeight; return div;
 }
-function addTyping() {
+function addTyping(){
   const wrap=document.getElementById('msgs'); const div=document.createElement('div');
   div.className='msg';
   div.innerHTML=`<div class="mav">🤖</div><div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
@@ -1909,61 +1410,39 @@ function addTyping() {
 // ════════════════════════════════════════
 // COMPARE
 // ════════════════════════════════════════
-async function loadSaved() {
-  const res  = await fetch('/saved-datasets', { headers: authHeaders() });
-  const data = await res.json();
-  const sel  = document.getElementById('compSel');
-  sel.innerHTML = '<option value="">— Select —</option>';
-  (data.datasets||[]).forEach(d => {
-    const o=document.createElement('option'); o.value=d; o.textContent=d; sel.appendChild(o);
-  });
-  if (!data.datasets?.length) sel.innerHTML='<option value="">No saved datasets yet</option>';
+async function loadSaved(){
+  const res=await fetch('/saved-datasets',{headers:authHeaders()});
+  const data=await res.json();
+  const sel=document.getElementById('compSel');
+  sel.innerHTML='<option value="">— Select —</option>';
+  (data.datasets||[]).forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
+  if(!data.datasets?.length) sel.innerHTML='<option value="">No saved datasets yet</option>';
 }
-
-async function saveDS() {
-  if (!S.sid) { alert('Upload a file first!'); return; }
-  const lbl = document.getElementById('saveLabel').value.trim();
-  if (!lbl)  { alert('Enter a label!'); return; }
-  const res = await fetch('/save-dataset', {
-    method: 'POST',
-    headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: S.sid, label: lbl })
-  });
-  const data = await res.json();
-  if (res.ok) {
-    document.getElementById('saveMsg').innerHTML = `<span style="color:var(--green)">✅ Saved "${data.saved}" (${data.rows} rows)</span>`;
-    loadSaved();
-  } else {
-    document.getElementById('saveMsg').innerHTML = `<span style="color:red">❌ ${data.detail||'Save failed'}</span>`;
-  }
+async function saveDS(){
+  if(!S.sid){alert('Upload a file first!');return;}
+  const lbl=document.getElementById('saveLabel').value.trim();
+  if(!lbl){alert('Enter a label!');return;}
+  const res=await fetch('/save-dataset',{method:'POST',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({session_id:S.sid,label:lbl})});
+  const data=await res.json();
+  if(res.ok){document.getElementById('saveMsg').innerHTML=`<span style="color:var(--green)">✅ Saved "${data.saved}" (${data.rows} rows)</span>`;loadSaved();}
+  else{document.getElementById('saveMsg').innerHTML=`<span style="color:red">❌ ${data.detail||'Save failed'}</span>`;}
 }
-
-async function doCompare() {
-  if (!S.sid) { alert('Upload a dataset first!'); return; }
-  const lbl = document.getElementById('compSel').value;
-  if (!lbl)  { alert('Select a saved dataset!'); return; }
-  const res = await fetch('/compare', {
-    method: 'POST',
-    headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: S.sid, compare_label: lbl })
-  });
-  const data = await res.json();
-  if (!res.ok) { alert(data.detail); return; }
-  renderComparison(data, lbl);
+async function doCompare(){
+  if(!S.sid){alert('Upload a dataset first!');return;}
+  const lbl=document.getElementById('compSel').value;
+  if(!lbl){alert('Select a saved dataset!');return;}
+  const res=await fetch('/compare',{method:'POST',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({session_id:S.sid,compare_label:lbl})});
+  const data=await res.json();
+  if(!res.ok){alert(data.detail);return;}
+  renderComparison(data,lbl);
 }
-
-function renderComparison(data, lbl) {
+function renderComparison(data,lbl){
   document.getElementById('compResults').style.display='block';
-
-  // ── Shape cards ──
   const shDiv=document.getElementById('compShape'); shDiv.innerHTML='';
-  if (data.stats?.shape) {
+  if(data.stats?.shape){
     Object.entries(data.stats.shape).forEach(([key,sh],i)=>{
-      const rowDiff = i===0 ? null :
-        Object.values(data.stats.shape)[0].rows - sh.rows;
       const d=document.createElement('div'); d.className='card';
-      d.innerHTML=`
-        <div style="font-size:.68rem;color:${i===0?'var(--amber)':'var(--teal)'};text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700">${key}</div>
+      d.innerHTML=`<div style="font-size:.68rem;color:${i===0?'var(--amber)':'var(--teal)'};text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700">${key}</div>
         <div style="display:flex;gap:18px">
           <div><div style="font-family:var(--fd);font-size:1.5rem;font-weight:800">${sh.rows.toLocaleString()}</div><div style="font-size:.72rem;color:var(--muted)">Rows</div></div>
           <div><div style="font-family:var(--fd);font-size:1.5rem;font-weight:800">${sh.cols}</div><div style="font-size:.72rem;color:var(--muted)">Columns</div></div>
@@ -1971,25 +1450,21 @@ function renderComparison(data, lbl) {
       shDiv.appendChild(d);
     });
   }
-
-  // ── Drift Table ──
   const drift=data.stats?.drift||{};
   const driftEntries=Object.entries(drift);
-  if (driftEntries.length>0) {
+  if(driftEntries.length>0){
     document.getElementById('compDriftWrap').style.display='block';
     const tbody=document.getElementById('compDriftBody'); tbody.innerHTML='';
     const lbl0=Object.keys(data.stats?.shape||{})[0]||'Old';
     const lbl1=Object.keys(data.stats?.shape||{})[1]||'New';
     driftEntries.forEach(([col,d])=>{
-      // FIX #18: Safe property access — avoid crash with special chars in label
-      const colStats = data.stats ? data.stats[col] : null;
-      const statsOld = colStats ? colStats[lbl0] : null;
-      const statsNew = colStats ? colStats[lbl1] : null;
+      const colStats=data.stats?data.stats[col]:null;
+      const statsOld=colStats?colStats[lbl0]:null;
+      const statsNew=colStats?colStats[lbl1]:null;
       const meanOld=statsOld&&statsOld.mean!=null?statsOld.mean:'—';
       const meanNew=statsNew&&statsNew.mean!=null?statsNew.mean:'—';
       const pctChg=(typeof meanOld==='number'&&typeof meanNew==='number'&&meanOld!==0)
-        ? (((meanNew-meanOld)/(Math.abs(meanOld)||1))*100).toFixed(1)
-        : null;
+        ?(((meanNew-meanOld)/(Math.abs(meanOld)||1))*100).toFixed(1):null;
       const statusColor=d.status.includes('High')?'var(--red)':d.status.includes('Moderate')?'var(--amber)':'var(--green)';
       const arrow=pctChg!==null?(parseFloat(pctChg)>=0?'↑':'↓'):'';
       const chgColor=pctChg!==null?(parseFloat(pctChg)>=0?'var(--green)':'var(--red)'):'var(--muted)';
@@ -2003,8 +1478,6 @@ function renderComparison(data, lbl) {
       </tr>`;
     });
   }
-
-  // ── Charts ──
   const cDiv=document.getElementById('compCharts'); cDiv.innerHTML='';
   (data.charts||[]).forEach(ch=>{
     const d=document.createElement('div'); d.className='chart-card';
@@ -2012,34 +1485,29 @@ function renderComparison(data, lbl) {
       <img src="data:image/png;base64,${ch.image}" loading="lazy" style="width:100%;border-radius:7px;margin-top:9px"/>`;
     cDiv.appendChild(d);
   });
-
-  // ── Stats table ──
   const statCols=Object.keys(data.stats||{}).filter(k=>!['shape','drift'].includes(k));
-  if (statCols.length>0) {
+  if(statCols.length>0){
     document.getElementById('compStatsWrap').style.display='block';
     const sDiv=document.getElementById('compStats'); sDiv.innerHTML='';
     const [lbl0,lbl1]=Object.keys(data.stats?.shape||{});
     statCols.forEach(col=>{
-      const vals=data.stats[col]; if (!vals) return;
+      const vals=data.stats[col]; if(!vals) return;
       const v1=vals[lbl0]||{}; const v2=vals[lbl1]||{};
       const d=document.createElement('div'); d.className='sc-card';
       let rows='';
       const statLabels={mean:'Average',std:'Std Dev',median:'Median',min:'Min',max:'Max'};
       Object.entries(statLabels).forEach(([stat,label])=>{
-        if (v1[stat]===undefined) return;
+        if(v1[stat]===undefined) return;
         const pct=v1[stat]?((v2[stat]-v1[stat])/Math.abs(v1[stat])*100):0;
         const changed=Math.abs(pct)>5;
         const arrow=pct>0?'↑':pct<0?'↓':'';
         const col2=pct>2?'var(--green)':pct<-2?'var(--red)':'var(--muted)';
-        rows+=`<div class="srow">
-          <span class="sk">${label}</span>
+        rows+=`<div class="srow"><span class="sk">${label}</span>
           <div style="display:flex;align-items:center;gap:8px">
-            <span class="sv old">${v1[stat]}</span>
-            <span style="color:var(--muted)">→</span>
+            <span class="sv old">${v1[stat]}</span><span style="color:var(--muted)">→</span>
             <span class="sv new" style="${changed?'font-weight:700':''}">${v2[stat]}</span>
             ${changed?`<span style="font-size:.7rem;color:${col2}">${arrow}${Math.abs(pct).toFixed(1)}%</span>`:''}
-          </div>
-        </div>`;
+          </div></div>`;
       });
       d.innerHTML=`<div class="sc-ttl">${col}</div>${rows}`;
       sDiv.appendChild(d);
@@ -2050,35 +1518,25 @@ function renderComparison(data, lbl) {
 // ════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════
-function showErr(msg) {
-  const b=document.getElementById('errBox');
-  if (msg){b.style.display='flex';b.innerHTML='❌ '+msg;}
-  else{b.style.display='none';b.innerHTML='';}
-}
-function showPredErr(msg) {
-  const b=document.getElementById('predErr');
-  if (msg){b.style.display='flex';b.textContent='❌ '+msg;}
-  else{b.style.display='none';b.textContent='';}
-}
+function showErr(msg){const b=document.getElementById('errBox');if(msg){b.style.display='flex';b.innerHTML='❌ '+msg;}else{b.style.display='none';b.innerHTML='';}}
+function showPredErr(msg){const b=document.getElementById('predErr');if(msg){b.style.display='flex';b.textContent='❌ '+msg;}else{b.style.display='none';b.textContent='';}}
 
 // ════════════════════════════════════════
-// INIT — auto-login if token exists
+// INIT
 // ════════════════════════════════════════
 (async function init() {
   if (AUTH.token) {
     try {
-      const res  = await fetch('/me', { headers: authHeaders() });
+      const res = await fetch('/me', { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         updateNavUser(data.email, data.uploads_left, data.is_subscribed);
         dbg('Auto-login OK: ' + data.email, 'ok');
-      } else {
-        doLogout(); // token expired
-      }
-    } catch(e) { /* server not ready yet */ }
+      } else { doLogout(); }
+    } catch(e) {}
   }
   loadSaved();
-  dbg('InsightIQ v3.0 loaded', 'ok');
+  dbg('InsightIQ v3.1 loaded', 'ok');
 })();
 </script>
 </body>

@@ -1,7 +1,14 @@
+# ── CRITICAL: matplotlib backend MUST be set before any other import ──
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.font_manager
+
 from fastapi import FastAPI, UploadFile, File, Form, Request, HTTPException, Depends
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import os, uuid, traceback, hashlib, secrets
 import pandas as pd
@@ -15,7 +22,6 @@ from models import User, SavedDataset
 from data_processor import load_file, clean_data, get_dataset_info
 from ml_engine import train_classification, train_regression
 
-# ── FIX #13: Move all imports to top level ──
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
@@ -25,7 +31,22 @@ from chatbot import get_chat_response, build_dataset_context
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="InsightIQ Platform", version="3.1")
+
+# ── Startup: pre-build matplotlib font cache so first request never crashes ──
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[InsightIQ] Pre-building matplotlib font cache...")
+    try:
+        matplotlib.font_manager._load_fontmanager(try_read_cache=False)
+        fig, ax = plt.subplots()
+        plt.close(fig)
+        print("[InsightIQ] Font cache ready ✅")
+    except Exception as e:
+        print(f"[InsightIQ] Font cache warning (non-fatal): {e}")
+    yield
+
+
+app = FastAPI(title="InsightIQ Platform", version="3.1", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,24 +56,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates   = Jinja2Templates(directory="templates")
-UPLOAD_DIR  = Path("uploads");  UPLOAD_DIR.mkdir(exist_ok=True)
-CLEANED_DIR = Path("cleaned");  CLEANED_DIR.mkdir(exist_ok=True)
+templates = Jinja2Templates(directory="templates")
 
-# ── FIX #12: Session limit to prevent memory leak ──
+# ── FIX: Use /tmp on Render (ephemeral filesystem, only /tmp is writable) ──
+UPLOAD_DIR  = Path("/tmp/insightiq_uploads");  UPLOAD_DIR.mkdir(exist_ok=True)
+CLEANED_DIR = Path("/tmp/insightiq_cleaned");  CLEANED_DIR.mkdir(exist_ok=True)
+
+# ── Session store ──
 store: dict = {}
 MAX_SESSIONS = 100
 
 def _evict_old_sessions():
-    """Keep only last MAX_SESSIONS sessions"""
     if len(store) > MAX_SESSIONS:
         keys = list(store.keys())
         for k in keys[:len(store) - MAX_SESSIONS]:
             try: del store[k]
             except: pass
 
-RAZORPAY_KEY_ID     = "YOUR_KEY_ID"
-RAZORPAY_KEY_SECRET = "YOUR_KEY_SECRET"
+RAZORPAY_KEY_ID     = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+
+if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET: raise ValueError("RAZORPAY keys not set in environment variables")
 
 PLAN_AMOUNT   = 249900
 FREE_UPLOADS  = 2
@@ -203,10 +227,10 @@ async def verify_payment(request: Request, db: Session = Depends(get_db)):
         })
     except Exception:
         raise HTTPException(400, "Payment verification failed.")
-    user.is_subscribed    = True
+    user.is_subscribed       = True
     user.razorpay_payment_id = payment_id
-    user.upload_count     = 0
-    user.subscription_end = datetime.utcnow() + timedelta(days=30)
+    user.upload_count        = 0
+    user.subscription_end    = datetime.utcnow() + timedelta(days=30)
     db.commit()
     return JSONResponse({
         "status": "ok",
@@ -252,7 +276,6 @@ async def upload_file(request: Request, file: UploadFile = File(...),
 
         df.columns = [str(c).strip() for c in df.columns]
 
-        # FIX #12: Evict old sessions
         _evict_old_sessions()
         store[sid] = {"df": df, "filename": file.filename, "ext": ext,
                       "file_path": str(file_path)}
@@ -313,7 +336,6 @@ async def train(session_id: str = Form(...), task_type: str = Form(...),
             "chat_context":   build_dataset_context(df_clean, target_col, task_type, result),
         })
 
-        # ── FIX #6: Remove misleading "production ready" — send raw metrics only ──
         metrics = result["metrics"]
 
         return JSONResponse({
@@ -358,14 +380,11 @@ async def get_kpi(session_id: str, request: Request):
         s = store.get(session_id)
         if not s:
             raise HTTPException(404, "Session not found.")
-
-        # FIX #3: Proper None check instead of `or`
         df = s.get("df_clean")
         if df is None:
             df = s.get("df")
         if df is None:
             raise HTTPException(400, "No data in session.")
-
         kpis = compute_kpis(df)
         return JSONResponse({"status": "ok", "kpis": kpis})
     except HTTPException:
@@ -382,16 +401,13 @@ async def get_kpi(session_id: str, request: Request):
 @app.post("/llm-insight")
 async def llm_insight(request: Request):
     try:
-        import anthropic, os
-        # FIX #14: Add timeout
+        import anthropic
         body        = await request.json()
         chart_title = body.get("chart_title", "")
         chart_data  = body.get("chart_data", "")
         session_id  = body.get("session_id", "")
 
-        s = store.get(session_id, {})
-
-        # FIX #3: Proper None check
+        s  = store.get(session_id, {})
         df = s.get("df_clean")
         if df is None:
             df = s.get("df")
@@ -409,7 +425,7 @@ async def llm_insight(request: Request):
         import httpx
         client = anthropic.Anthropic(
             api_key=api_key,
-            http_client=httpx.Client(timeout=10.0)  # FIX #14: 10s timeout
+            http_client=httpx.Client(timeout=10.0)
         )
 
         prompt = f"""You are a business data analyst. Chart: "{chart_title}".
@@ -433,7 +449,7 @@ No jargon. Be direct."""
 
 
 # ════════════════════════════════════════
-# PREDICT FUTURE TRENDS — FIX #1: Proper time series
+# PREDICT FUTURE TRENDS
 # ════════════════════════════════════════
 
 @app.post("/predict-trends")
@@ -446,7 +462,6 @@ async def predict_trends(request: Request):
         if session_id not in store:
             raise HTTPException(404, "Session not found — please re-upload.")
 
-        # FIX #3: Proper None check
         s  = store[session_id]
         df = s.get("df_clean")
         if df is None:
@@ -455,9 +470,6 @@ async def predict_trends(request: Request):
             raise HTTPException(400, "No data in session.")
 
         from visualizer import _detect_date_col, _smart_num
-        import matplotlib
-        matplotlib.use('Agg')
-        import matplotlib.pyplot as plt
         import base64
         from io import BytesIO
 
@@ -465,9 +477,7 @@ async def predict_trends(request: Request):
         if not num_cols:
             raise HTTPException(400, "No numeric columns found for trend prediction.")
 
-        # Detect date column for proper time series
         date_col, date_series = _detect_date_col(df)
-
         target_cols = num_cols[:3]
         results = []
 
@@ -475,10 +485,7 @@ async def predict_trends(request: Request):
         PALETTE=['#00E5C8','#00BFFF','#FF8C42']
 
         n_cols = len(target_cols)
-
-        # FIX #2: Use figure-level facecolor, avoid global rcParams mutation
-        fig, axes = plt.subplots(n_cols, 1, figsize=(13, 4.5*n_cols),
-                                 facecolor=BG)
+        fig, axes = plt.subplots(n_cols, 1, figsize=(13, 4.5*n_cols), facecolor=BG)
         if n_cols == 1:
             axes = [axes]
 
@@ -503,78 +510,51 @@ async def predict_trends(request: Request):
 
             y = series.values.astype(float)
 
-            # ── FIX #1: Proper time series features ──
-            # Use lag features + trend instead of just row index
-            window = min(5, n // 3)
+            window    = min(5, n // 3)
             roll_mean = pd.Series(y).rolling(window, min_periods=1).mean().values
             roll_std  = pd.Series(y).rolling(window, min_periods=1).std().fillna(0).values
 
-            # Build feature matrix: [index, rolling_mean, rolling_std]
-            X = np.column_stack([
-                np.arange(n),
-                roll_mean,
-                roll_std
-            ])
-
-            scaler = StandardScaler()
+            X = np.column_stack([np.arange(n), roll_mean, roll_std])
+            scaler   = StandardScaler()
             X_scaled = scaler.fit_transform(X)
 
-            # Use LinearRegression for trend (more honest for time series)
             lr = LinearRegression()
             lr.fit(X_scaled, y)
             lr_score = lr.score(X_scaled, y)
 
-            # Build future features
-            future_idx = np.arange(n, n + n_future)
-            # Extend rolling stats using last known values
-            last_mean = roll_mean[-1]
-            last_std  = roll_std[-1]
-            X_future  = np.column_stack([
-                future_idx,
-                np.full(n_future, last_mean),
-                np.full(n_future, last_std),
-            ])
+            future_idx      = np.arange(n, n + n_future)
+            X_future        = np.column_stack([future_idx, np.full(n_future, roll_mean[-1]), np.full(n_future, roll_std[-1])])
             X_future_scaled = scaler.transform(X_future)
-            y_future = lr.predict(X_future_scaled)
+            y_future        = lr.predict(X_future_scaled)
 
-            # Confidence interval (simple ±1 std of residuals)
             residuals = y - lr.predict(X_scaled)
             std_err   = np.std(residuals)
             ci_upper  = y_future + 1.0 * std_err
             ci_lower  = y_future - 1.0 * std_err
 
-            # Plot actual
             if date_series is not None:
                 try:
                     x_actual = pd.to_datetime(date_series.reset_index(drop=True)).values[:n]
-                    # Generate future dates
                     freq = pd.infer_freq(pd.to_datetime(date_series.dropna()))
                     if freq:
-                        last_date = pd.to_datetime(date_series.dropna()).iloc[-1]
-                        x_future_dates = pd.date_range(last_date, periods=n_future+1, freq=freq)[1:]
+                        last_date       = pd.to_datetime(date_series.dropna()).iloc[-1]
+                        x_future_dates  = pd.date_range(last_date, periods=n_future+1, freq=freq)[1:]
                         ax.plot(x_actual, y, color=color, linewidth=1.5, alpha=0.9, label='Actual')
-                        ax.plot(x_future_dates, y_future, color='white', linewidth=2,
-                                linestyle='--', alpha=0.9, label='Forecast')
-                        ax.fill_between(x_future_dates, ci_lower, ci_upper,
-                                        color='white', alpha=0.08, label='±1 Std Error')
+                        ax.plot(x_future_dates, y_future, color='white', linewidth=2, linestyle='--', alpha=0.9, label='Forecast')
+                        ax.fill_between(x_future_dates, ci_lower, ci_upper, color='white', alpha=0.08, label='±1 Std Error')
                         ax.axvline(x=x_actual[-1], color=MUTED, linewidth=1, linestyle=':')
                         fig.autofmt_xdate()
                     else:
                         raise ValueError("Cannot infer frequency")
                 except:
-                    # Fallback to index
                     ax.plot(range(n), y, color=color, linewidth=1.5, alpha=0.9, label='Actual')
-                    ax.plot(range(n-1, n+n_future), [y[-1]]+list(y_future),
-                            color='white', linewidth=2, linestyle='--', label='Forecast')
-                    ax.fill_between(range(n, n+n_future), ci_lower, ci_upper,
-                                    color='white', alpha=0.08, label='±1 Std Error')
+                    ax.plot(range(n-1, n+n_future), [y[-1]]+list(y_future), color='white', linewidth=2, linestyle='--', label='Forecast')
+                    ax.fill_between(range(n, n+n_future), ci_lower, ci_upper, color='white', alpha=0.08, label='±1 Std Error')
                     ax.axvline(x=n-1, color=MUTED, linewidth=1, linestyle=':')
             else:
                 ax.plot(range(n), y, color=color, linewidth=1.5, alpha=0.9, label='Actual')
-                ax.plot(range(n-1, n+n_future), [y[-1]]+list(y_future),
-                        color='white', linewidth=2, linestyle='--', label='Forecast')
-                ax.fill_between(range(n, n+n_future), ci_lower, ci_upper,
-                                color='white', alpha=0.08, label='±1 Std Error')
+                ax.plot(range(n-1, n+n_future), [y[-1]]+list(y_future), color='white', linewidth=2, linestyle='--', label='Forecast')
+                ax.fill_between(range(n, n+n_future), ci_lower, ci_upper, color='white', alpha=0.08, label='±1 Std Error')
                 ax.axvline(x=n-1, color=MUTED, linewidth=1, linestyle=':')
                 ax.text(n-1, ax.get_ylim()[0], '  Now', fontsize=8, color=MUTED)
 
@@ -586,8 +566,7 @@ async def predict_trends(request: Request):
             ax.set_title(f'{col}   |   {trend}   |   Forecast change: {pct_chg:+.1f}%   |   {r2_disp}',
                          fontsize=10, color=chg_col if abs(pct_chg) > 2 else TEXT, pad=8)
             ax.set_ylabel(col, fontsize=9, color=color)
-            ax.legend(fontsize=8, loc='upper left',
-                      facecolor=BG2, edgecolor='#1E2D45', labelcolor=TEXT)
+            ax.legend(fontsize=8, loc='upper left', facecolor=BG2, edgecolor='#1E2D45', labelcolor=TEXT)
             ax.grid(True, alpha=0.2, color='#1E2D45')
 
             results.append({
@@ -606,15 +585,14 @@ async def predict_trends(request: Request):
         plt.tight_layout()
 
         buf = BytesIO()
-        fig.savefig(buf, format='png', dpi=120, bbox_inches='tight',
-                    facecolor=fig.get_facecolor())
+        fig.savefig(buf, format='png', dpi=120, bbox_inches='tight', facecolor=fig.get_facecolor())
         buf.seek(0)
         img_b64 = base64.b64encode(buf.read()).decode()
         plt.close(fig)
 
         insights = []
         for r in results:
-            fit_warn = "" if r["r2_fit"] >= 0.3 else " ⚠️ Low R² — trend may not be reliable."
+            fit_warn  = "" if r["r2_fit"] >= 0.3 else " ⚠️ Low R² — trend may not be reliable."
             direction = "increase" if r["trend"] == "up" else "decrease"
             insights.append(
                 f"<b>{r['column']}</b>: Expected to <b>{direction}</b> by "
@@ -730,7 +708,6 @@ async def save_dataset(request: Request, db: Session = Depends(get_db)):
         if session_id not in store:
             raise HTTPException(404, "Session not found — please re-upload.")
 
-        # FIX #3: Proper None check
         df = store[session_id].get("df_clean")
         if df is None:
             df = store[session_id].get("df")
@@ -762,9 +739,9 @@ async def save_dataset(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/saved-datasets")
 async def list_saved(request: Request, db: Session = Depends(get_db)):
-    token   = request.headers.get("X-Auth-Token", "")
-    user    = get_user_by_token(token, db)
-    user_id = user.id if user else None
+    token    = request.headers.get("X-Auth-Token", "")
+    user     = get_user_by_token(token, db)
+    user_id  = user.id if user else None
     datasets = db.query(SavedDataset).filter(SavedDataset.user_id == user_id).all()
     return JSONResponse({"status": "ok", "datasets": [d.label for d in datasets]})
 
@@ -785,7 +762,6 @@ async def compare(request: Request, db: Session = Depends(get_db)):
         if session_id not in store:
             raise HTTPException(404, "Session not found.")
 
-        # FIX #3: Proper None check
         df_new = store[session_id].get("df_clean")
         if df_new is None:
             df_new = store[session_id].get("df")
