@@ -92,7 +92,9 @@ def upload_status(user: User) -> dict:
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    with open("templates/index.html", "r") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 
 # ════════════════════════════════════════
@@ -822,4 +824,4 @@ async def health():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000))) 
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
