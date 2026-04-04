@@ -25,3 +25,7 @@ jobs:
       - name: FastAPI check
         run: |
           python -c "import fastapi; print('FastAPI OK')"
+
+      - name: Docker image build karo
+        run: |
+          docker build -t fastapi-app .
